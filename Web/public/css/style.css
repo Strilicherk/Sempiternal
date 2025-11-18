@@ -105,27 +105,28 @@ header nav {
 .header__nav__deslogado {
     width: 30%;
     display: flex;
-    justify-content: space-between;
-    background-color: blue;
-}
-
-.navbar__items {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 5%;
 }
 
 .ranking__banda {
-    width: 45%;
-    background-color: red;
+    width: 30%;
+    display: flex;
+    align-items: center;
+
+    border-right: 2px solid var(--text-secondary);
+    margin-right: 1%;
 }
 
 .login__cadastro {
-    flex-grow: 1;
-    background-color: purple;
+    width: 70%;
 }
 
+.navbar__items {
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    gap: 15%;
+}
 
 .btn {
     background-color: var(--text-primary);
