@@ -1,0 +1,71 @@
+/* CSS do Banner */
+
+.banner {
+    width: 100%;
+    min-height: 93vh;
+    
+    display: flex;
+    justify-content: center;
+    
+    
+    
+    background-image: linear-gradient(to top, var(--bg-dark), rgba(197, 23, 23, 0.4));
+}
+
+.cta__container {
+    width: 35%;
+    margin-top: 10%;
+}
+
+/* CSS da Seção Expresse-se */
+
+.expresse {
+    width: 100%;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    background-color: var(--bg-dark);
+}
+
+.expresse__container {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* CSS das Funcionalidades */
+
+.funcionalidade__container {
+    display: flex;
+    flex-direction: column;
+    gap: 20%;
+}
+
+.funcionalidade__content {
+    display: flex;
+}
+
+.vote__borda {
+    border: 2px solid transparent;
+    
+    background-image: 
+    linear-gradient(var(--bg-dark), var(--bg-dark)),
+    linear-gradient(to bottom, #3498DB, #D94444);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+
+    border-radius: 10px;
+}
+
+.favorite__borda {
+    border: 1px solid var(--feeling-energy);
+    border-radius: 10px;
+}
+
+.funcionalidade__content img {
+    height: 10%;
+}
