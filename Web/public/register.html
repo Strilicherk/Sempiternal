@@ -2,8 +2,8 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="public/css/style.css">
-    <link rel="stylesheet" href="public/css/register_login.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/register_login.css">
     <title>Sempiternal - Cadastro</title>
 </head>
 <body>
@@ -19,7 +19,7 @@
                 <div class="login__cadastro">
                     <ul class="navbar__items">
                         <li>
-                            <a href="login.html">LOGIN</a>
+                            <a href="login copy.html">LOGIN</a>
                         </li>
                         <li>
                             <a href="register.html"><span class="botao">CADASTRE-SE</span></a>
@@ -29,15 +29,15 @@
             </div>
         </nav>
     </header>
-
+    
     <main>
-        <h1>SEMPITERNAL</h1>
+        <div id="response__card"></div>
         <div class="auth__card">
             <div class="auth__tabs">
                 <a href="register.html" class="tab__link tab__active">CADASTRO</a>
-                <a href="login.html" class="tab__link">LOGIN</a>
+                <a href="login copy.html" class="tab__link">LOGIN</a>
             </div>
-
+            
             <form class="form__group">
                 <div class="input__box">
                     <label for="input__nickname">Nickname</label>
@@ -70,11 +70,11 @@
                     <span id="msg__confirmacao__erro" class="msg__error">As senhas não coincidem.</span>
                 </div>
                 
-                <button type="button" class="btn__form" onclick="Cadastrar()">CRIAR CONTA</button>
+                <button type="button" class="btn__form" onclick="Cadastrar(input__nickname.value, input__email.value.toLowerCase(), input__senha.value, input__confirmar__senha.value)">CRIAR CONTA</button>
             </form>
         </div>
     </main>
-
+    
     <script>
         var nickValido = false;
         var emailValido = false;
@@ -83,22 +83,69 @@
         var nickname;
         var email;
         var senha;
-
-        function ValidarNickname() {
-            nickname = input__nickname.value;
-            if (nickname.trim().length < 3) {
-                msg__nickname__erro.style.display = 'block';
-                nickValido = false;
-            } else {
-                msg__nickname__erro.style.display = 'none';
-                nickValido = true;
+        
+        /* 
+        Chama cadastrar.
+        valida se o nickname atende.
+        busca no bd se já está cadastrado.
+        valida se o email atende.
+        busca no bd se ja esta cadastrado.
+        valida se a senha atende.
+        valida se as senhas são iguais.
+        cadastra no banco
+        */
+        
+        function Cadastrar(nickname, email, senha, confirmaSenha) {
+            if (ValidarNickname(nickname) && ValidarEmail(email) && ValidarSenha(senha) && ValidarConfirmacaoSenha(senha, confirmaSenha)) {
+                fetch("/usuarios/cadastrar", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        // Agora vá para o arquivo routes/usuario.js
+                        nicknameValue: nickname,
+                        emailValue: email,
+                        senhaValue: senha,
+                        confirmaSenhaValue: confirmaSenha
+                        
+                    }),
+                })
+                .then(function (resposta) {
+                    console.log("resposta: ", resposta);
+                    
+                    if (resposta.ok) {
+                        response__card.value = "Cadastro realizado com sucesso! Redirecionando para tela de Login...";
+                        
+                        /* setTimeout(() => {
+                            window.location = "login.html";
+                        }, "2000");
+                        
+                        limparFormulario();
+                        finalizarAguardar(); */
+                    } else {
+                        response__card.value = "Houve um erro ao tentar realizar o cadastro!"
+                        throw "Houve um erro ao tentar realizar o cadastro!";
+                    }
+                })
+                .catch(function (resposta) {
+                    console.log(`#ERRO: ${resposta}`);
+                    /* finalizarAguardar(); */
+                });
             }
         }
         
-        function ValidarEmail() {
-            email = input__email.value.toLowerCase();
-            emailValido = false;
-            
+        function ValidarNickname(nickname) {
+            if (nickname.trim().length < 3) {
+                msg__nickname__erro.style.display = 'block';
+                return false;
+            } else {
+                msg__nickname__erro.style.display = 'none';
+                return true;
+            }
+        }
+        
+        function ValidarEmail(email) {
             var provedoresPermitidos = [
             "@gmail.com", 
             "@outlook.com", 
@@ -109,21 +156,17 @@
             for (var i = 0; i < provedoresPermitidos.length; i++) {
                 var provedor = provedoresPermitidos[i];
                 if (email.endsWith(provedor)) {
-                    emailValido = true;
-                    break; 
+                    msg__email__erro.style.display = 'none';
+                    return true
                 }
             }
             
-            if (emailValido == false) {
-                msg__email__erro.style.display = 'block';
-            } else {
-                msg__email__erro.style.display = 'none';
-            }
+            msg__email__erro.style.display = 'block';
+            return false;
         }
         
-        function ValidarForcaSenha() {
-            senha = input__senha.value;
-            var caracteresEspeciais = "!@#$%^&*(),.?\":{}|<>";
+        function ValidarSenha(senha) {
+            var caracteresEspeciais = `!@#$%^&*(),.?\":{}|<>`;
             var numeros = "0123456789";
             
             var temMaiuscula = false;
@@ -184,33 +227,20 @@
             }
             
             if (temMaiuscula && temMinuscula && temNumero && temEspecial && temTamanho) {
-                senhaValida = true;
-                ValidarConfirmacaoSenha(); 
-            } else {
-                senhaValida = false;
-            }
+                return true;
+            } 
+            
+            return false;
         }
         
-        function ValidarConfirmacaoSenha() {
-            var confirmacao = input__confirmar__senha.value;
-            var senhaAtual = input__senha.value;
-            
-            if (confirmacao.length > 0 && senhaAtual != confirmacao) {
+        function ValidarConfirmacaoSenha(senha, confirmarSenha) {
+            if (confirmarSenha.length > 0 && senha != confirmarSenha) {
                 msg__confirmacao__erro.style.display = 'block';
-                confirmaValido = false;
-            } else {
-                msg__confirmacao__erro.style.display = 'none';
-                confirmaValido = true;
+                return false;
             }
-        }
-
-        function Cadastrar() {
-            if (!nickValido || !emailValido || !senhaValida || !confirmaValido) {
-                return;
-            } else {
-                console.log("Cadastro enviado");
-            }
-        }
+            msg__confirmacao__erro.style.display = 'none';
+            return true;
+        }        
     </script>
 </body>
 </html>
