@@ -1,0 +1,166 @@
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;     
+
+    margin-top: 1rem;
+    
+    gap: 2rem; 
+}
+
+.auth__card {
+    background-color: var(--bg-medium);
+    border-radius: 10px;
+    padding: 3rem;
+    width: 400px; 
+    
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.auth__tabs {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #333; 
+}
+
+.tab__link {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 1.1rem;
+    text-align: center;
+    padding-bottom: 10px;
+    width: 50%; 
+    cursor: pointer;
+    text-decoration: none;
+    
+    color: var(--text-secondary); 
+    border-bottom: 3px solid transparent; 
+    transition: 0.3s;
+}
+
+.tab__link:hover {
+    color: var(--text-primary);
+}
+
+.tab__active {
+    color: var(--text-primary);
+    border-bottom: 3px solid var(--feeling-angry); 
+}
+
+.form__group {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.input__box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; 
+}
+
+.input__box label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.input__box input {
+    background-color: #161616; 
+    border: 1px solid #333;
+    border-radius: 5px;
+    padding: 12px;
+    
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: 0.3s;
+}
+
+.input__box input:focus {
+    border-color: var(--feeling-angry); 
+}
+
+.input__box input::placeholder {
+    color: #555;
+}
+
+.msg__error {
+    color: var(--feeling-angry);
+    font-size: 0.8rem;
+    font-family: 'Inter', sans-serif;
+    display: none; 
+    margin-top: 5px;
+}
+
+.texto__verde {
+    color: var(--feeling-catharsis) !important; 
+    text-decoration: line-through; 
+    opacity: 0.8;
+    transition: 0.3s;
+}
+
+.password__requirements li {
+    transition: 0.3s;
+    color: var(--text-secondary);
+}
+
+.forgot__password {
+    align-self: flex-end; 
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: -10px; 
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.forgot__password:hover {
+    color: var(--text-primary);
+    text-decoration: underline;
+}
+
+.btn__form {
+    width: 100%;
+    background-color: var(--text-primary); 
+    color: black;
+    
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 1rem;
+    text-transform: uppercase;
+    
+    padding: 12px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 1rem;
+}
+
+.btn__form:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.02);
+}
+
+.password__requirements {
+    padding-left: 1.2rem; 
+    
+    margin-top: -0.5rem; 
+    margin-bottom: 0.5rem;
+    
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.password__requirements li {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem; 
+    color: var(--text-secondary);
+    line-height: 1.2;
+    list-style-type: disc; 
+}

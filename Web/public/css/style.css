@@ -137,18 +137,25 @@ header nav {
     color: var(--feeling-angry);
 }
 
+/* CSS dos Botões */
+
 .botao__cta {
     background-color: var(--text-primary);
     color: black; 
-    padding: 10px 20px;
+    padding: 15px 60px;
     border-radius: 5px;
     
     border: none; 
 }
 
+.botao__cta:hover {
+    transition: 0.3s;
+    transform: scale(1.5);
+}
+
 .botao {
     font-family: 'Archivo Black', sans-serif;
-    font-size: 1rem;
+    font-size: 1.5rem;
     margin: 0;
 }
 

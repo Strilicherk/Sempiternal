@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="public/css/style.css">
+    <link rel="stylesheet" href="public/css/register_login.css">
+    <title>Sempiternal - Cadastro</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="landing_page.html" class="header__logo"> <h2>SEMPITERNAL</h2> </a>
+            <div class="header__nav__deslogado">
+                <div class="ranking__banda">
+                    <ul class="navbar__items">
+                        <li><a href="navigation.html">Bandas</a></li>
+                    </ul>
+                </div>
+                <div class="login__cadastro">
+                    <ul class="navbar__items">
+                        <li>
+                            <a href="login.html">LOGIN</a>
+                        </li>
+                        <li>
+                            <a href="register.html"><span class="botao">CADASTRE-SE</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <h1>SEMPITERNAL</h1>
+        <div class="auth__card">
+            <div class="auth__tabs">
+                <a href="register.html" class="tab__link tab__active">CADASTRO</a>
+                <a href="login.html" class="tab__link">LOGIN</a>
+            </div>
+
+            <form class="form__group">
+                <div class="input__box">
+                    <label for="input__nickname">Nickname</label>
+                    <input type="text" id="input__nickname" placeholder="Como você quer ser chamado" maxlength="20" oninput="ValidarNickname()">
+                    <span id="msg__nickname__erro" class="msg__error">Nickname inválido (mínimo 3 caracteres).</span>
+                </div>
+                
+                <div class="input__box">
+                    <label for="input__email">Email</label>
+                    <input type="email" id="input__email" placeholder="voce@email.com" oninput="ValidarEmail()">
+                    <span id="msg__email__erro" class="msg__error">Use um email válido: Gmail, Outlook, Yahoo ou Hotmail.</span>
+                </div>
+                
+                <div class="input__box">
+                    <label for="input__senha">Crie uma senha</label>
+                    <input type="password" id="input__senha" placeholder="Digite sua senha" oninput="ValidarForcaSenha()">
+                </div>
+                
+                <ul class="password__requirements">
+                    <li id="req__maiuscula">A senha deve conter no mínimo 1 letra maiúscula.</li>
+                    <li id="req__minuscula">A senha deve conter no mínimo 1 letra minúscula.</li>
+                    <li id="req__numero">A senha deve conter no mínimo 1 número.</li>
+                    <li id="req__especial">A senha deve conter no mínimo 1 caractere especial.</li>
+                    <li id="req__tamanho">A senha deve conter no mínimo 8 caracteres.</li>
+                </ul>
+                
+                <div class="input__box">
+                    <label for="input__confirmar__senha">Confirme sua senha</label>
+                    <input type="password" id="input__confirmar__senha" placeholder="Repita a senha anterior" oninput="ValidarConfirmacaoSenha()">
+                    <span id="msg__confirmacao__erro" class="msg__error">As senhas não coincidem.</span>
+                </div>
+                
+                <button type="button" class="btn__form" onclick="Cadastrar()">CRIAR CONTA</button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        var nickValido = false;
+        var emailValido = false;
+        var senhaValida = false;
+        var confirmaValido = false;
+        var nickname;
+        var email;
+        var senha;
+
+        function ValidarNickname() {
+            nickname = input__nickname.value;
+            if (nickname.trim().length < 3) {
+                msg__nickname__erro.style.display = 'block';
+                nickValido = false;
+            } else {
+                msg__nickname__erro.style.display = 'none';
+                nickValido = true;
+            }
+        }
+        
+        function ValidarEmail() {
+            email = input__email.value.toLowerCase();
+            emailValido = false;
+            
+            var provedoresPermitidos = [
+            "@gmail.com", 
+            "@outlook.com", 
+            "@yahoo.com",
+            "@hotmail.com", 
+            ];
+            
+            for (var i = 0; i < provedoresPermitidos.length; i++) {
+                var provedor = provedoresPermitidos[i];
+                if (email.endsWith(provedor)) {
+                    emailValido = true;
+                    break; 
+                }
+            }
+            
+            if (emailValido == false) {
+                msg__email__erro.style.display = 'block';
+            } else {
+                msg__email__erro.style.display = 'none';
+            }
+        }
+        
+        function ValidarForcaSenha() {
+            senha = input__senha.value;
+            var caracteresEspeciais = "!@#$%^&*(),.?\":{}|<>";
+            var numeros = "0123456789";
+            
+            var temMaiuscula = false;
+            var temMinuscula = false;
+            var temNumero = false;
+            var temEspecial = false;
+            var temTamanho = false;
+            
+            if (senha.length >= 8) {
+                temTamanho = true;
+            }
+            
+            for (var i = 0; i < senha.length; i++) {
+                var char = senha[i];
+                
+                if (char >= 'A' && char <= 'Z') {
+                    temMaiuscula = true;
+                }
+                else if (char >= 'a' && char <= 'z') {
+                    temMinuscula = true;
+                }
+                else if (numeros.indexOf(char) > -1) {
+                    temNumero = true;
+                }
+                else if (caracteresEspeciais.indexOf(char) > -1) {
+                    temEspecial = true;
+                }
+            }
+            
+            if (temMaiuscula) {
+                req__maiuscula.classList.add('texto__verde');
+            } else {
+                req__maiuscula.classList.remove('texto__verde');
+            }
+            
+            if (temMinuscula) {
+                req__minuscula.classList.add('texto__verde');
+            } else {
+                req__minuscula.classList.remove('texto__verde');
+            }
+            
+            if (temNumero) {
+                req__numero.classList.add('texto__verde');
+            } else {
+                req__numero.classList.remove('texto__verde');
+            }
+            
+            if (temEspecial) {
+                req__especial.classList.add('texto__verde');
+            } else {
+                req__especial.classList.remove('texto__verde');
+            }
+            
+            if (temTamanho) {
+                req__tamanho.classList.add('texto__verde');
+            } else {
+                req__tamanho.classList.remove('texto__verde');
+            }
+            
+            if (temMaiuscula && temMinuscula && temNumero && temEspecial && temTamanho) {
+                senhaValida = true;
+                ValidarConfirmacaoSenha(); 
+            } else {
+                senhaValida = false;
+            }
+        }
+        
+        function ValidarConfirmacaoSenha() {
+            var confirmacao = input__confirmar__senha.value;
+            var senhaAtual = input__senha.value;
+            
+            if (confirmacao.length > 0 && senhaAtual != confirmacao) {
+                msg__confirmacao__erro.style.display = 'block';
+                confirmaValido = false;
+            } else {
+                msg__confirmacao__erro.style.display = 'none';
+                confirmaValido = true;
+            }
+        }
+
+        function Cadastrar() {
+            if (!nickValido || !emailValido || !senhaValida || !confirmaValido) {
+                return;
+            } else {
+                console.log("Cadastro enviado");
+            }
+        }
+    </script>
+</body>
+</html>
