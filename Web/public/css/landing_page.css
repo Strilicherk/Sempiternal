@@ -1,32 +1,45 @@
+/* Css da Main */
+
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+
 /* CSS do Banner */
 
 .banner {
-    width: 100%;
-    min-height: 93vh;
+    min-height: 90vh;
     
     display: flex;
     justify-content: center;
     
-    
-    
-    background-image: linear-gradient(to top, var(--bg-dark), rgba(197, 23, 23, 0.4));
+    background-image: linear-gradient(to top, var(--bg-dark), rgb(131, 0, 0));
 }
 
 .cta__container {
     width: 35%;
-    margin-top: 10%;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    gap: 4rem;
 }
 
 /* CSS da Seção Expresse-se */
 
 .expresse {
-    width: 100%;
-    
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     
-    background-color: var(--bg-dark);
+    gap: 2rem;
+
+    background-image: linear-gradient(to top, rgba(32, 32, 32, 0.1), var(--bg-dark));
 }
 
 .expresse__container {
@@ -35,6 +48,8 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    
+    gap: 5rem;
 }
 
 /* CSS das Funcionalidades */
@@ -42,11 +57,14 @@
 .funcionalidade__container {
     display: flex;
     flex-direction: column;
-    gap: 20%;
+    gap: 1rem;
 }
 
 .funcionalidade__content {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
 }
 
 .vote__borda {
@@ -57,15 +75,155 @@
     linear-gradient(to bottom, #3498DB, #D94444);
     background-origin: border-box;
     background-clip: padding-box, border-box;
-
+    
     border-radius: 10px;
+    padding: 0.5rem 0;
 }
 
 .favorite__borda {
     border: 1px solid var(--feeling-energy);
     border-radius: 10px;
+    padding: 0.5rem 0rem;
 }
 
 .funcionalidade__content img {
-    height: 10%;
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.titulo__texto {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    
+    gap: 0.5rem;
+}
+
+/* CSS do Texto de Sentimentos */
+
+.info__container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.musica__texto {
+    width: 50%;
+}
+
+.musica__emocoes {
+    width: 50%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.tag {
+    padding: 10px 7%;
+    border-radius: 10px;
+}
+
+.tag__raiva {
+    color: var(--feeling-angry);
+    background-color: color-mix(in srgb, var(--feeling-angry), transparent 90%);
+    border: 1px solid var(--feeling-angry);
+}
+
+.tag__energia {
+    color: var(--feeling-energy);
+    background-color: color-mix(in srgb, var(--feeling-energy), transparent 90%);
+    border: 1px solid var(--feeling-energy);
+}
+
+.tag__solidao {
+    color: var(--feeling-loneliness);
+    background-color: color-mix(in srgb, var(--feeling-loneliness), transparent 90%);
+    border: 1px solid var(--feeling-loneliness);
+}
+
+.tag__desafio {
+    color: var(--feeling-challenge);
+    background-color: color-mix(in srgb, var(--feeling-challenge), transparent 90%);
+    border: 1px solid var(--feeling-challenge);
+}
+
+.tag__angustia {
+    color: var(--feeling-anguish);
+    background-color: color-mix(in srgb, var(--feeling-anguish), transparent 90%);
+    border: 1px solid var(--feeling-anguish);
+}
+
+.tag__catarse {
+    color: var(--feeling-catharsis);
+    background-color: color-mix(in srgb, var(--feeling-catharsis), transparent 90%);
+    border: 1px solid var(--feeling-catharsis);
+}
+
+.tag__tristeza {
+    color: var(--feeling-sadness);
+    background-color: color-mix(in srgb, var(--feeling-sadness), transparent 90%);
+    border: 1px solid var(--feeling-sadness);
+}
+
+/* CSS da Seção Conheça-se */
+
+.conheca__container {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.conheca__grafico {
+    width: 40%;
+    height: 30vh;
+}
+
+.radar__texto {
+    width: 50%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 3rem;
+}
+
+/* CSS da Seção de Bandas */
+
+.bandas {
+    display: flex;
+    justify-content: center;
+
+    margin-top: 10rem;
+    margin-bottom: 5rem;
+
+    background-color: var(--bg-dark);
+}
+
+.banda__container h2 {
+    align-self: center;
+}
+
+.banda__container {
+    width: 80%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    gap: 5rem;
+}
+
+.lista__bandas {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 3rem;
+}
+
+.lista__bandas img {
+    width: auto;
+    height: auto;
+    max-height: 150px;
+    max-width: 150px;
 }
