@@ -19,7 +19,7 @@
                 <div class="login__cadastro">
                     <ul class="navbar__items">
                         <li>
-                            <a href="login copy.html">LOGIN</a>
+                            <a href="login.html">LOGIN</a>
                         </li>
                         <li>
                             <a href="register.html"><span class="botao">CADASTRE-SE</span></a>
@@ -35,7 +35,7 @@
         <div class="auth__card">
             <div class="auth__tabs">
                 <a href="register.html" class="tab__link tab__active">CADASTRO</a>
-                <a href="login copy.html" class="tab__link">LOGIN</a>
+                <a href="login.html" class="tab__link">LOGIN</a>
             </div>
             
             <form class="form__group">
@@ -87,7 +87,7 @@
         cadastra no banco
         */
         
-        function mostrarFeedback(mensagem, funcionou) {
+        function MostrarFeedback(mensagem, funcionou) {
             modal__card.innerHTML = mensagem;
             modal__card.style.display = "block";
             modal__card.classList.remove("modal__success", "modal__error");
@@ -102,54 +102,6 @@
                 setTimeout(() => {
                     modal__card.style.display = "none";
                 }, 5000);
-            }
-        }
-        
-        
-        function Cadastrar(nickname, email, senha, confirmaSenha) {
-            if (ValidarNickname(nickname) && ValidarEmail(email) && ValidarSenha(senha) && ValidarConfirmacaoSenha(senha, confirmaSenha)) {
-                fetch("/usuarios/cadastrar", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        // Agora vá para o arquivo routes/usuario.js
-                        nicknameServer: nickname,
-                        emailServer: email,
-                        senhaServer: senha
-                    }),
-                })
-                .then(function (resposta) {
-                    console.log(resposta);
-                    
-                    if (resposta.ok) {
-                        mostrarFeedback("Cadastro realizado com sucesso! Redirecionando para tela de Login...", true);
-                        
-                        setTimeout(() => {
-                            window.location.href = "login.html"
-                        }, 2000);
-                        
-                    } else {
-                        console.log(resposta)
-                        
-                        if (resposta.status == 409) {
-                            resposta.text().then(textoDoErro => {
-                                if (textoDoErro.includes("NICKNAME")) {
-                                    mostrarFeedback("Esse nickname já está sendo utilizado!", false);
-                                } else {
-                                    mostrarFeedback("Esse e-mail já foi cadastrado!", false);
-                                }
-                            });
-                        } else {
-                            mostrarFeedback("Erro inesperado. Tente novamente!", false)
-                        }
-                    }
-                })
-                .catch(function (resposta) {
-                    console.log(`#ERRO: ${resposta}`);
-                    mostrarFeedback("Erro de conexão. Verifique sua internet.", false);
-                });
             }
         }
         
@@ -259,6 +211,54 @@
             msg__confirmacao__erro.style.display = 'none';
             return true;
         }        
+        
+        function Cadastrar(nickname, email, senha, confirmaSenha) {
+            if (ValidarNickname(nickname) && ValidarEmail(email) && ValidarSenha(senha) && ValidarConfirmacaoSenha(senha, confirmaSenha)) {
+                fetch("/usuarios/cadastrar", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        // Agora vá para o arquivo routes/usuario.js
+                        nicknameServer: nickname,
+                        emailServer: email,
+                        senhaServer: senha
+                    }),
+                })
+                .then(function (resposta) {
+                    console.log(resposta);
+                    
+                    if (resposta.ok) {
+                        
+                        MostrarFeedback("Cadastro realizado com sucesso! Redirecionando para tela de Login...", true);
+                        setTimeout(() => {
+                            window.location.href = "login.html";
+                        }, 2000);
+                        
+                    } else {
+                        console.log(resposta);
+                        
+                        if (resposta.status == 409) {
+                            resposta.text().then(textoDoErro => {
+                                if (textoDoErro.includes("NICKNAME")) {
+                                    MostrarFeedback("Esse nickname já está sendo utilizado!", false);
+                                } else {
+                                    MostrarFeedback("Esse e-mail já foi cadastrado!", false);
+                                }
+                            });
+                        } else {
+                            MostrarFeedback("Erro inesperado. Tente novamente!", false);
+                        }
+                    }
+                })
+                .catch(function (resposta) {
+                    console.log(`#ERRO: ${resposta}`);
+                    MostrarFeedback("Erro de conexão. Verifique sua internet.", false);
+                });
+            }
+        }
+        
     </script>
 </body>
 </html>

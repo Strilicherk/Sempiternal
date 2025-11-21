@@ -1,159 +1,164 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>AquaTech | Login</title>
-
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/register_login.css">
     <script src="./js/sessao.js"></script>
-
-    <link rel="stylesheet" href="./css/estilo.css">
-    <link rel="icon" href="./assets/icon/favicon2.ico">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <title>Sempiternal - Login</title>
 </head>
-
 <body>
-
-    <!--Header-->
-
-    <div class="header">
-        <div class="container">
-            <h1 class="titulo">AquaTech</h1>
-            <ul class="navbar">
-                <li>
-                    <a href="index.html">Inicial</a>
-                </li>
-                <li>
-                    <a href="simulador.html">Simulador</a>
-                </li>
-                <li>|</li>
-                <li class="agora">
-                    <a href="#">Login</a>
-                </li>
-                <li>
-                    <a href="cadastro.html">Cadastro</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-
-    <div class="login">
-        <div class="alerta_erro">
-            <div class="card_erro" id="cardErro">
-                <span id="mensagem_erro"></span>
-            </div>
-        </div>
-        <div class="container">
-            <div class="card card-login">
-                <h2>Olá de volta!</h2>
-                <div class="formulario">
-                    <div class="campo">
-                        <span>E-mail:</span>
-                        <input id="email_input" type="text" placeholder="Login">
-                    </div>
-                    <div class="campo">
-                        <span>Senha:</span>
-                        <input id="senha_input" type="password" placeholder="******">
-                    </div>
-                    <button class="botao" onclick="entrar()">Entrar</button>
+    <header>
+        <nav>
+            <a href="landing_page.html" class="header__logo"> <h2>SEMPITERNAL</h2> </a>
+            <div class="header__nav__deslogado">
+                <div class="ranking__banda">
+                    <ul class="navbar__items">
+                        <li><a href="navigation.html">Bandas</a></li>
+                    </ul>
                 </div>
-
-                <div id="div_aguardar" class="loading-div">
-                    <img src="./assets/circle-loading.gif" id="loading-gif">
+                <div class="login__cadastro">
+                    <ul class="navbar__items">
+                        <li>
+                            <a href="login.html">LOGIN</a>
+                        </li>
+                        <li>
+                            <a href="register.html"><span class="botao">CADASTRE-SE</span></a>
+                        </li>
+                    </ul>
                 </div>
-
-                <div id="div_erros_login"></div>
             </div>
+        </nav>
+    </header>
+    
+    <main>
+        <div id="modal__card" class="modal__error"></div>
+        <div class="auth__card">
+            <div class="auth__tabs">
+                <a href="register.html" class="tab__link">CADASTRO</a>
+                <a href="login.html" class="tab__link tab__active">LOGIN</a>
+            </div>
+            
+            <form class="form__group">
+                <div class="input__box">
+                    <label for="input__email__login">Email</label>
+                    <input type="email" id="input__email__login" placeholder="voce@email.com" oninput="ValidarEmailLogin(input__email__login.value)">
+                    <span id="msg__email__login__erro" class="msg__error">Use um email válido: Gmail, Outlook, Yahoo ou Hotmail.</span>
+                </div>
+                
+                <div class="input__box">
+                    <label for="input__senha__login">Senha</label>
+                    <input type="password" id="input__senha__login" placeholder="••••••" oninput="ValidarSenhaLogin(input__senha__login.value)">
+                    <span id="msg__senha__login__erro" class="msg__error">Digite sua senha para entrar.</span>
+                </div>
+                
+                <a href="#" class="forgot__password">Esqueceu a senha?</a>
+                
+                <button type="button" class="btn__form" onclick="Entrar(input__email__login.value, input__senha__login.value)">ENTRAR</button>
+            </form>
         </div>
-    </div>
-
-    <!--footer inicio-->
-    <div class="footer">
-        <div class="container">
-            <h4>Feito com amor por aluno &hearts; SPTech &copy; 2023</h4>
-            <span class="version">v1.0.0</span>
-        </div>
-    </div>
-    <!--footer fim-->
-
-</body>
-
-</html>
-
-<script>
-
-
-    function entrar() {
-        aguardar();
-
-        var emailVar = email_input.value;
-        var senhaVar = senha_input.value;
-
-        if (emailVar == "" || senhaVar == "") {
-            cardErro.style.display = "block"
-            mensagem_erro.innerHTML = "(Mensagem de erro para todos os campos em branco)";
-            finalizarAguardar();
+    </main>
+    
+    <script>
+        function ValidarEmailLogin(email) {
+            email = email.toLowerCase();
+            var emailLoginValido = false;
+            
+            var provedoresPermitidos = [
+            "@gmail.com", 
+            "@hotmail.com", 
+            "@outlook.com", 
+            "@yahoo.com",
+            ];
+            
+            for (var i = 0; i < provedoresPermitidos.length; i++) {
+                var provedor = provedoresPermitidos[i];
+                if (email.endsWith(provedor)) {
+                    msg__email__login__erro.style.display = 'none';
+                    return true;
+                }
+            }
+            
+            msg__email__login__erro.style.display = 'block';
             return false;
         }
-        else {
-            setInterval(sumirMensagem, 5000)
-        }
-
-        console.log("FORM LOGIN: ", emailVar);
-        console.log("FORM SENHA: ", senhaVar);
-
-        fetch("/usuarios/autenticar", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                emailServer: emailVar,
-                senhaServer: senhaVar
-            })
-        }).then(function (resposta) {
-            console.log("ESTOU NO THEN DO entrar()!")
-
-            if (resposta.ok) {
-                console.log(resposta);
-
-                resposta.json().then(json => {
-                    console.log(json);
-                    console.log(JSON.stringify(json));
-                    sessionStorage.EMAIL_USUARIO = json.email;
-                    sessionStorage.NOME_USUARIO = json.nome;
-                    sessionStorage.ID_USUARIO = json.id;
-                    sessionStorage.AQUARIOS = JSON.stringify(json.aquarios)
-
-                    setTimeout(function () {
-                        window.location = "./dashboard/cards.html";
-                    }, 1000); // apenas para exibir o loading
-
-                });
-
-            } else {
-
-                console.log("Houve um erro ao tentar realizar o login!");
-
-                resposta.text().then(texto => {
-                    console.error(texto);
-                    finalizarAguardar(texto);
-                });
+        
+        function ValidarSenhaLogin(senha) {
+            if (senha.length < 1) {
+                msg__senha__login__erro.style.display = 'block';
+                return false;
             }
 
-        }).catch(function (erro) {
-            console.log(erro);
-        })
+            msg__senha__login__erro.style.display = 'none';
+            return true;
+        }
+        
+        function MostrarFeedback(mensagem) {
+            modal__card.innerHTML = mensagem;
+            modal__card.style.display = "block";
+            
+            if (funcionou == false) {
+                setTimeout(() => {
+                    modal__card.style.display = "none";
+                }, 5000);
+            }
+        }
 
-        return false;
-    }
+        function ValidarCredenciais(email, senha) {
+            console.log("FORM LOGIN: ", email);
+            console.log("FORM SENHA: ", senha);
+            
+            fetch("/usuarios/autenticar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    emailServer: email,
+                    senhaServer: senha
+                })
+            })
+            .then(function (resposta) {
+                console.log("ESTOU NO THEN DO entrar()!")
+                
+                if (resposta.ok) {
+                    console.log(resposta);
+                    
+                    resposta.json().then(json => {
+                        console.log(json);
+                        console.log(JSON.stringify(json));
+                        console.log()
+                        sessionStorage.ID_USUARIO = json.id;
+                        sessionStorage.NICKNAME = json.nickname;
 
-    function sumirMensagem() {
-        cardErro.style.display = "none"
-    }
+                        window.location = "home.html";
+                    });
+                    
+                } else {
 
-</script>
+                    console.log("Houve um erro ao tentar realizar o login!");
+                    
+                    resposta.text().then(texto => {
+                        console.error(texto);
+                        MostrarFeedback(texto)
+                    });
+                }
+                
+            }).catch(function (erro) {
+                MostrarFeedback(erro)
+                console.log(erro);
+            })
+            
+            return false;
+        }
+        
+
+        function Entrar(email, senha) {            
+            if (ValidarEmailLogin(email) && ValidarSenhaLogin(senha)) {
+                ValidarCredenciais(email, senha)
+            }
+        }
+        
+    </script>
+</body>
+</html>
