@@ -31,7 +31,7 @@
     </header>
     
     <main>
-        <div id="response__card"></div>
+        <div id="modal__card"></div>
         <div class="auth__card">
             <div class="auth__tabs">
                 <a href="register.html" class="tab__link tab__active">CADASTRO</a>
@@ -41,19 +41,19 @@
             <form class="form__group">
                 <div class="input__box">
                     <label for="input__nickname">Nickname</label>
-                    <input type="text" id="input__nickname" placeholder="Como você quer ser chamado" maxlength="20" oninput="ValidarNickname()">
+                    <input type="text" id="input__nickname" placeholder="Como você quer ser chamado" maxlength="20" oninput="ValidarNickname(input__nickname.value)">
                     <span id="msg__nickname__erro" class="msg__error">Nickname inválido (mínimo 3 caracteres).</span>
                 </div>
                 
                 <div class="input__box">
                     <label for="input__email">Email</label>
-                    <input type="email" id="input__email" placeholder="voce@email.com" oninput="ValidarEmail()">
+                    <input type="email" id="input__email" placeholder="voce@email.com" oninput="ValidarEmail(input__email.value)">
                     <span id="msg__email__erro" class="msg__error">Use um email válido: Gmail, Outlook, Yahoo ou Hotmail.</span>
                 </div>
                 
                 <div class="input__box">
                     <label for="input__senha">Crie uma senha</label>
-                    <input type="password" id="input__senha" placeholder="Digite sua senha" oninput="ValidarForcaSenha()">
+                    <input type="password" id="input__senha" placeholder="Digite sua senha" oninput="ValidarSenha(input__senha.value)">
                 </div>
                 
                 <ul class="password__requirements">
@@ -66,7 +66,7 @@
                 
                 <div class="input__box">
                     <label for="input__confirmar__senha">Confirme sua senha</label>
-                    <input type="password" id="input__confirmar__senha" placeholder="Repita a senha anterior" oninput="ValidarConfirmacaoSenha()">
+                    <input type="password" id="input__confirmar__senha" placeholder="Repita a senha anterior" oninput="ValidarConfirmacaoSenha(input__senha.value, input__confirmar__senha.value)">
                     <span id="msg__confirmacao__erro" class="msg__error">As senhas não coincidem.</span>
                 </div>
                 
@@ -76,14 +76,6 @@
     </main>
     
     <script>
-        var nickValido = false;
-        var emailValido = false;
-        var senhaValida = false;
-        var confirmaValido = false;
-        var nickname;
-        var email;
-        var senha;
-        
         /* 
         Chama cadastrar.
         valida se o nickname atende.
@@ -95,6 +87,25 @@
         cadastra no banco
         */
         
+        function mostrarFeedback(mensagem, funcionou) {
+            modal__card.innerHTML = mensagem;
+            modal__card.style.display = "block";
+            modal__card.classList.remove("modal__success", "modal__error");
+            
+            if (funcionou === true) {
+                modal__card.classList.add("modal__success");
+            } else {
+                modal__card.classList.add("modal__error");
+            }
+            
+            if (funcionou == false) {
+                setTimeout(() => {
+                    modal__card.style.display = "none";
+                }, 5000);
+            }
+        }
+        
+        
         function Cadastrar(nickname, email, senha, confirmaSenha) {
             if (ValidarNickname(nickname) && ValidarEmail(email) && ValidarSenha(senha) && ValidarConfirmacaoSenha(senha, confirmaSenha)) {
                 fetch("/usuarios/cadastrar", {
@@ -104,39 +115,46 @@
                     },
                     body: JSON.stringify({
                         // Agora vá para o arquivo routes/usuario.js
-                        nicknameValue: nickname,
-                        emailValue: email,
-                        senhaValue: senha,
-                        confirmaSenhaValue: confirmaSenha
-                        
+                        nicknameServer: nickname,
+                        emailServer: email,
+                        senhaServer: senha
                     }),
                 })
                 .then(function (resposta) {
-                    console.log("resposta: ", resposta);
+                    console.log(resposta);
                     
                     if (resposta.ok) {
-                        response__card.value = "Cadastro realizado com sucesso! Redirecionando para tela de Login...";
+                        mostrarFeedback("Cadastro realizado com sucesso! Redirecionando para tela de Login...", true);
                         
-                        /* setTimeout(() => {
-                            window.location = "login.html";
-                        }, "2000");
+                        setTimeout(() => {
+                            window.location.href = "login.html"
+                        }, 2000);
                         
-                        limparFormulario();
-                        finalizarAguardar(); */
                     } else {
-                        response__card.value = "Houve um erro ao tentar realizar o cadastro!"
-                        throw "Houve um erro ao tentar realizar o cadastro!";
+                        console.log(resposta)
+                        
+                        if (resposta.status == 409) {
+                            resposta.text().then(textoDoErro => {
+                                if (textoDoErro.includes("NICKNAME")) {
+                                    mostrarFeedback("Esse nickname já está sendo utilizado!", false);
+                                } else {
+                                    mostrarFeedback("Esse e-mail já foi cadastrado!", false);
+                                }
+                            });
+                        } else {
+                            mostrarFeedback("Erro inesperado. Tente novamente!", false)
+                        }
                     }
                 })
                 .catch(function (resposta) {
                     console.log(`#ERRO: ${resposta}`);
-                    /* finalizarAguardar(); */
+                    mostrarFeedback("Erro de conexão. Verifique sua internet.", false);
                 });
             }
         }
         
         function ValidarNickname(nickname) {
-            if (nickname.trim().length < 3) {
+            if ((nickname.trim()).length < 3) {
                 msg__nickname__erro.style.display = 'block';
                 return false;
             } else {
