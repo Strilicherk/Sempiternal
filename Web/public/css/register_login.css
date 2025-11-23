@@ -27,15 +27,10 @@
 }
 
 main {
-    display: flex;
     flex-grow: 1;
     justify-content: center;
-    flex-direction: column;
-    align-items: center;     
-    
+    align-items: center;
     margin-top: 1rem;
-    
-    gap: 2rem; 
 }
 
 .auth__card {
@@ -86,38 +81,6 @@ main {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-}
-
-.input__box {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem; 
-}
-
-.input__box label {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-}
-
-.input__box input {
-    background-color: #161616; 
-    border: 1px solid #333;
-    border-radius: 5px;
-    padding: 12px;
-    
-    color: var(--text-primary);
-    font-family: 'Inter', sans-serif;
-    outline: none;
-    transition: 0.3s;
-}
-
-.input__box input:focus {
-    border-color: var(--feeling-angry); 
-}
-
-.input__box input::placeholder {
-    color: #555;
 }
 
 .msg__error {
