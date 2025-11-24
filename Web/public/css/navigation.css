@@ -1,6 +1,13 @@
+body {
+    height: 100vh;
+}
+
+
 main {
-    margin: 50px 0px;
-    gap: 20px;
+    min-height: 0;
+    display: flex;
+    flex-grow: 1;
+    padding: 20px 0;
 }
 
 /* CSS do Título e Barra de Pesquisa */
@@ -24,11 +31,15 @@ main {
 #band__list {
     display: flex;
     flex-wrap: wrap;
-    gap: 30px;
+    overflow-y: auto;
+    gap: 15px;
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--feeling-angry) var(--bg-dark);
 }
 
 .band__box {
-    width: 300px;
+    width: 200px;
     height: 200px;
 
     display: flex;
