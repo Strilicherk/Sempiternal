@@ -14,6 +14,12 @@ function listar(req, res) {
     });
 }
 
+function buscarPorId(req, res) {
+    bandaModel.buscarPorId(req.params.idBanda).then(function (resultado) {
+        
+    })
+}
 module.exports = {
-    listar
+    listar,
+    buscarPorId
 }

@@ -7,4 +7,8 @@ router.get("/listar", function (req, res) {
     bandaController.listar(req, res);
 });
 
+router.get("/buscar/:id", function (req, res) {
+    bandaController.buscarPorId(req, res);
+});
+
 module.exports = router;

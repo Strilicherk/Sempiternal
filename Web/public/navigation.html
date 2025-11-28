@@ -86,7 +86,7 @@
         var bandList;
 
         function GetBandas() {
-            fetch(`/bandas/listar`, {
+            fetch(`/bandas/buscar`, {
                 cache: 'no-store',
                 headers: {
                     "Content-Type": "application/json"
@@ -121,7 +121,7 @@
 
             if (input__search.value.trim() != '') {
                 for (var i = 0; i < bandList.length; i++) {
-                    if (bandList[i].BAND_NAME.includes(input__search.value.trim())) {
+                    if (bandList[i].name.includes(input__search.value.trim())) {
                         filteredBandList.push(bandList[i]);
                     }            
                 }
@@ -131,9 +131,11 @@
 
             for (var i = 0; i < filteredBandList.length; i++) {
                 html += `
-                    <div class="band__box" style="background-image: url('${filteredBandList[i].COVER_PATH}')">
-                        <div class="band__name"><h3>${filteredBandList[i].BAND_NAME}</h3></div>
-                    </div>
+                    <a href="banda.html?id=${filteredBandList[i].id}">
+                        <div class="band__box" style="background-image: url('${filteredBandList[i].cover_path}')">
+                            <div class="band__name"><h3>${filteredBandList[i].name}</h3></div>
+                        </div>
+                    </a>
                 `
             }
             

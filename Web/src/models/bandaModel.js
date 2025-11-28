@@ -2,7 +2,7 @@ var database = require("../database/config");
 
 function listar() {
     var instrucaoSql = `
-        SELECT ID_BAND, BAND_NAME, COVER_PATH FROM BAND ORDER BY BAND_NAME;
+        SELECT id, name, cover_path FROM band ORDER BY name;
     `;
 
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
