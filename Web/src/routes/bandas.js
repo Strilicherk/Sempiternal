@@ -7,7 +7,7 @@ router.get("/listar", function (req, res) {
     bandaController.listar(req, res);
 });
 
-router.get("/buscar/:id", function (req, res) {
+router.get("/buscar/:idBanda", function (req, res) {
     bandaController.buscarPorId(req, res);
 });
 

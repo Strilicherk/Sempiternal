@@ -1,3 +1,4 @@
+// const { buscarPorId } = require("../controllers/bandaController");
 var database = require("../database/config");
 
 function listar() {
@@ -9,6 +10,15 @@ function listar() {
     return database.executar(instrucaoSql);
 }
 
+function buscarPorId(id) {
+    var instrucaoSql = `
+        SELECT * FROM vw_band_album_music WHERE id = ${id};
+    `
+    return database.executar(instrucaoSql);
+}
+
+
 module.exports = {
-    listar
+    listar,
+    buscarPorId
 };

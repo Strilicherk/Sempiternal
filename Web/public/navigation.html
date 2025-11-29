@@ -79,14 +79,10 @@
     <script>
         GetBandas()
         
-        
-        // De primeira eu fiz de maneira ineficiente, para cara letra que o usuários pressionasse uma requisição seria feita pela API.
-        // Agora eu estou trazendo todas as bandas de uma vez, e filtrando no próprio vetor.
-        // Isso faz com que seja necessário uma única requisição, evitando lag e custos excessivos.
         var bandList;
-
+        
         function GetBandas() {
-            fetch(`/bandas/buscar`, {
+            fetch(`/bandas/listar`, {
                 cache: 'no-store',
                 headers: {
                     "Content-Type": "application/json"
@@ -117,18 +113,21 @@
         function ListarBandas() {
             var filteredBandList = [];
             var html = '';
-        
-
-            if (input__search.value.trim() != '') {
+            
+            var filtro = input__search.value.trim().toLowerCase();
+            
+            if (filtro != '') {
                 for (var i = 0; i < bandList.length; i++) {
-                    if (bandList[i].name.includes(input__search.value.trim())) {
+                    var nomeBandaMinusculo = bandList[i].name.toLowerCase();
+                    if (nomeBandaMinusculo.includes(filtro)) {
                         filteredBandList.push(bandList[i]);
-                    }            
+                    }       
                 }
             } else {
                 filteredBandList = bandList;
             }
-
+            
+            
             for (var i = 0; i < filteredBandList.length; i++) {
                 html += `
                     <a href="banda.html?id=${filteredBandList[i].id}">
