@@ -22,17 +22,18 @@
     
     
     <script>
-        var idBanda;
-
         window.onload = function() {
-            idBanda = new URLSearchParams(window.location.search).get('id');
+            var idBanda = new URLSearchParams(window.location.search).get('id');
+            // idUsuario = sessionStorage.ID_USUARIO;
+            var idUsuario = 1;
 
-            fetch(`/bandas/buscar/${idBanda}`, {
+            fetch(`/bandas/buscar/${idBanda}?idUsuario=${idUsuario}`, {
                 method: "GET",
             })
             .then(function (resposta) {
+                console.log(resposta)
                 resposta.json().then((bandInfo) => {
-                    console.log(bandInfo)
+
                 });
             })
             .catch(function (resposta) {
