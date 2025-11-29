@@ -23,7 +23,6 @@ CREATE TABLE band (
         REFERENCES genre (id)
 );
 
-
 CREATE TABLE album (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -34,7 +33,6 @@ CREATE TABLE album (
         REFERENCES band (id)
         ON DELETE CASCADE
 );
-
 
 CREATE TABLE music (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -47,7 +45,6 @@ CREATE TABLE music (
     CONSTRAINT fk_music_mood FOREIGN KEY (mood_id)
         REFERENCES mood (id)
 );
-
 
 CREATE TABLE user (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -76,3 +73,26 @@ CREATE TABLE music_like (
         ON DELETE CASCADE
 );
 
+CREATE VIEW vw_band_album_music AS
+    SELECT 
+        b.id,
+        b.name AS band,
+        a.name AS album,
+        m.name AS music,
+        md.name AS mood,
+        md.color AS color,
+        g.name AS genre,
+        b.about AS about,
+        DATE_FORMAT(a.release_date, '%d/%m/%Y') AS 'album_release_date',
+        a.cover_path AS 'album_cover_path',
+        b.banner_path AS 'band_banner_path'
+    FROM
+        band b
+            JOIN
+        genre g ON g.id = b.genre_id
+            JOIN
+        album a ON a.band_id = b.id
+            JOIN
+        music m ON m.album_id = a.id
+            JOIN
+        mood md ON md.id = m.mood_id;
