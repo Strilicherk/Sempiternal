@@ -1,0 +1,62 @@
+body {
+    height: 100vh;
+}
+
+main {
+    padding: 20px 0;
+    background-color: blue;
+}
+
+/* CSS do Título e Barra de Pesquisa */
+
+.title__search {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+}
+
+.input__box {
+    width: 50%;
+}
+
+#input__search {
+    width: 100%;
+}
+
+/* CSS do Conteúdo */
+
+#band__list {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    gap: 15px;
+    
+    scrollbar-width: thin;
+    scrollbar-color: var(--feeling-angry) var(--bg-dark);
+}
+
+.band__box {
+    width: 200px;
+    height: 200px;
+    
+    display: flex;
+    flex-direction: column-reverse ;
+    
+    background-size: cover;
+}
+
+.band__name {
+    height: 20%;
+    
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    
+    background-color: black;
+}
+
+.band__name h3 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
