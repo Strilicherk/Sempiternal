@@ -75,7 +75,9 @@ CREATE TABLE music_like (
 
 CREATE VIEW vw_band_album_music AS
     SELECT 
-        b.id,
+        b.id AS band_id,
+        a.id AS album_id,
+        m.id AS music_id,
         b.name AS band,
         a.name AS album,
         m.name AS music,
@@ -96,3 +98,4 @@ CREATE VIEW vw_band_album_music AS
         music m ON m.album_id = a.id
             JOIN
         mood md ON md.id = m.mood_id;
+        

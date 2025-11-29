@@ -1,11 +1,14 @@
 USE sempiternal;
 
+INSERT INTO user (nickname, email, password) VALUES
+	('Strilicherk', 'matheuscherk@hotmail.com','Sempiternal#100');
+
 INSERT INTO genre (name) VALUES 
 	('New Metal'), 
 	('Metalcore'), 
 	('Post-Hardcore');
     
-    INSERT INTO mood (name, color) VALUES 
+INSERT INTO mood (name, color) VALUES 
 	('Raiva', '#DC2626'),
 	('Angústia', '#9333EA'),
 	('Tristeza', '#3B82F6'),
@@ -45,6 +48,9 @@ INSERT INTO music (name, album_id, mood_id) VALUES
 	('True Friends', 3, 3),
 	('Drown', 3, 4);
 
+INSERT INTO music_like VALUES
+	(1,1);
+
 SELECT * FROM user;
 SELECT * FROM genre;
 SELECT * FROM mood;
@@ -54,3 +60,21 @@ SELECT * FROM music;
 SELECT * FROM music_like;
 SELECT * FROM vw_band_album_music;
 
+-- Query feita para puxar todos os dados necessários da página da banda, ou seja, trazer de uma única vez:
+-- nome da banda, bio, banner, gênero, nome do álbum, capa, data de lançamento, músicas que fazem parte, sentimento da música, 
+-- cor do sentimento, se é a banda favorita e se é a música favorita.
+SELECT 
+    vw.*,
+    IF(ml.user_id IS NOT NULL, 1, 0) AS is_liked,
+    IF(vw.band_id = u.band_id, 1, 0) AS is_favorite_band,
+    IF(vw.music_id = u.music_id, 1, 0) AS is_favorite_music
+FROM
+    vw_band_album_music AS vw
+        LEFT JOIN
+    music_like ml ON vw.music_id = ml.music_id
+        AND ml.user_id = 1
+        LEFT JOIN
+    user u ON u.id = 1
+		WHERE vw.band_id = 4;
+    
+    
