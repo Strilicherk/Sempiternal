@@ -76,5 +76,7 @@ FROM
         LEFT JOIN
     user u ON u.id = 1
 		WHERE vw.band_id = 4;
+        
+SELECT * FROM vw_band_ranking;
     
     

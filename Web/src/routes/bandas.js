@@ -11,4 +11,9 @@ router.get("/buscar/:idBanda", function (req, res) {
     bandaController.buscarPorId(req, res);
 });
 
+router.get("/buscarRanking", function (req, res) {
+    bandaController.buscarRanking(req, res);
+});
+
+
 module.exports = router;

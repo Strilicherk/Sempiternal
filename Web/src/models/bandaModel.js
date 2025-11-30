@@ -31,8 +31,17 @@ function buscarPorId(idBanda, idUsuario) {
     return database.executar(instrucaoSql);
 }
 
+function buscarRanking() {
+    var instrucaoSql = `
+        SELECT * FROM vw_band_ranking;
+    `
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
 
 module.exports = {
     listar,
-    buscarPorId
+    buscarPorId,
+    buscarRanking
 };

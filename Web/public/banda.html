@@ -20,7 +20,31 @@
         </nav>
     </header>
     <main>
-        <section class="band__banner"></section>
+        <section class="band__banner" id="banner-placeholder">
+            <div class="band__header">
+                <div class="band__tags title__icon">
+                    <h1 class="band__title" id="band-name-placeholder"></h1>
+                    <button>
+                        <img src="" alt="Star icon." id="favorite-icon-placeholder">
+                    </button>
+                </div>
+                <div class="band__tags">
+                    <span class="tag ranking" id="ranking-placeholder"></span>
+                    <span class="tag genre" id="genre-placeholder"></span>
+                </div>
+            </div>
+        </section>
+        
+        <nav class="band__nav">
+            <button class="nav__item" id="about">SOBRE</button>
+            <button class="nav__item" id="album">ÁLBUNS</button>
+        </nav>
+        
+        <section class="band__info">
+            <h2 class="section__title">HISTÓRIA</h2>
+            <p class="band__bio" id="bio-placeholder"></p>
+        </section>
+        
     </main>
     <footer>
         <div class="footer__container">
@@ -54,24 +78,61 @@
     </footer>
     
     <script>
-        window.onload = function() {
+        var bandaInfos;
+        var bandasRanking;
+        
+        about.classList.add('active');
+        
+        window.onload = async function() {
             var idBanda = new URLSearchParams(window.location.search).get('id');
             // idUsuario = sessionStorage.ID_USUARIO;
             var idUsuario = 1;
-
-            fetch(`/bandas/buscar/${idBanda}?idUsuario=${idUsuario}`, {
-                method: "GET",
-            })
-            .then(function (resposta) {
-                console.log(resposta)
-                resposta.json().then((bandInfo) => {
-
-                });
-            })
-            .catch(function (resposta) {
+            
+            try {
+                var resposta;
+                
+                resposta = await fetch(`/bandas/buscarRanking`);
+                
+                if (resposta.ok) {
+                    bandasRanking = await resposta.json();
+                    console.log(bandasRanking);
+                } else {
+                    console.log('Erro ao trazer ranking')
+                }
+                
+                resposta = await fetch(`/bandas/buscar/${idBanda}?idUsuario=${idUsuario}`)
+                
+                if (resposta.ok) {
+                    bandaInfos = await resposta.json();
+                    console.log(bandaInfos);
+                } else {
+                    console.log('Erro ao trazer as informações da banda')
+                }
+                
+                PopularCampos();
+            } catch (resposta) {
                 console.log(`#ERRO: ${resposta}`);
-            });
+            }
         }
+        
+        function PopularCampos() {
+            document.getElementById('banner-placeholder').style.backgroundImage = `url('${bandaInfos.banner_path}')`;
+            document.getElementById('band-name-placeholder').innerText = bandaInfos.band;
+            document.getElementById('favorite-icon-placeholder').src = bandaInfos.is_favorite_band ? '../assets/icons/FilledStar.png' : '../assets/icons/EmptyStar.png';
+            
+            for (var i = 0; i < bandasRanking.length; i++) {
+                if (bandasRanking[i].band_id == bandaInfos.band_id) {
+                    ranking = i + 1;
+                    break;
+                }
+            }
+            
+            document.getElementById('ranking-placeholder').innerText = `Ranking #${ranking}`;
+            document.getElementById('genre-placeholder').innerText = bandaInfos.genre;
+            document.getElementById('bio-placeholder').innerText = bandaInfos.about;
+        }
+        
+        
         
     </script>
 </body>

@@ -99,3 +99,21 @@ CREATE VIEW vw_band_album_music AS
             JOIN
         mood md ON md.id = m.mood_id;
         
+        
+CREATE VIEW vw_band_ranking AS
+    SELECT 
+        b.id AS band_id,
+        b.name AS band_name,
+        b.cover_path,
+        COUNT(ml.user_id) AS total_likes
+    FROM
+        band b
+            JOIN
+        album a ON a.band_id = b.id
+            JOIN
+        music m ON m.album_id = a.id
+            LEFT JOIN
+        music_like ml ON ml.music_id = m.id
+    GROUP BY b.id , b.name , b.cover_path
+    ORDER BY total_likes DESC;
+        

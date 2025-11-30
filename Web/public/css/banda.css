@@ -1,26 +1,120 @@
 body {
-    height: 100vh;
+    gap: 50px;
 }
 
-main {
-    min-height: 0;
+main button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.band__banner {
+    height: 400px; 
+    
     display: flex;
-    flex-grow: 1;
-    padding: 20px 0;
-
+    align-items: end;
+    
+    /* background-image: url('../assets/images/banners/BMTH.png'); */
+    
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-/* CSS do Banner */
+.band__header {
+    padding: 0 15px;
+    margin-bottom: 15px;
+}
 
-    .band__banner {
-        width: 100%;
-        height: 400px;
+.band__tags {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
 
-        background-image: linear-gradient(to top, rgba(0, 0, 0, 0.452), rgba(131, 0, 0, 0)), url(../assets/images/banners/BMTH.png);
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center center;
+.title__icon {
+    margin-bottom: 15px;
+}
 
-        
-        border-radius: 10px;
-    }
+.band__title {
+    text-transform: uppercase;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+}
+
+#favorite-icon-placeholder {
+    width: 50px;
+    height: 50px;
+}
+
+.tag {
+    font-family: 'Inter';
+    font-size: 1rem;
+    font-weight: 700;
+    
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    
+    padding: 6px 14px;
+    border-radius: 20px;
+}
+
+.ranking {
+    background: linear-gradient(45deg, #BF953F, #FCF6BA, #B38728);
+    color: #000000;
+    box-shadow: 0 2px 5px #B38728;
+}
+
+.genre {
+    background-color: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.band__nav {
+    display: flex;
+    gap: 30px;
+    padding: 0 30px;
+    border-bottom: 1px solid rgba(255,255,255,0.1); 
+}
+
+.nav__item {
+    color: var(--text-secondary);
+    font-weight: 700;
+    font-size: 1.1rem;
+    
+    padding-bottom: 12px;
+    transition: color 0.3s ease;
+
+    background: none;
+    border: none;
+}
+
+.nav__item:hover {
+    color: var(--feeling-angry);
+    border-bottom: 3px solid var(--feeling-angry);
+}
+
+.active {
+    color: var(--feeling-angry);
+    border-bottom: 3px solid var(--feeling-angry);
+}
+
+.band__info {
+    background-color: var(--bg-medium); 
+    padding: 30px 30px;
+    border-radius: 0 0 16px 16px; 
+}
+
+.section__title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.band__bio {
+    line-height: 1.8;
+    color: var(--text-secondary);
+    max-width: 800px;
+    white-space: pre-line;
+}

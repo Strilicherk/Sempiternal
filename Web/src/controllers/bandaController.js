@@ -35,6 +35,20 @@ function buscarPorId(req, res) {
     }
 }
 
+function buscarRanking(req, res) {
+    bandaModel.buscarRanking().then(function (resultado) {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(200).json([]);
+        }
+    }).catch(function (erro) {
+        console.log(erro);
+        console.log("Houve um erro ao buscar as bandas: ", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
 function formatarJson(resultado) {
     
     var bandaInfos = {
@@ -43,11 +57,10 @@ function formatarJson(resultado) {
         genre: resultado[0].genre, 
         about: resultado[0].about, 
         banner_path: resultado[0].band_banner_path,
+        is_favorite_band: resultado[0].is_favorite_band,
         
         albums: []
     }
-    
-    console.log('Somente banda', bandaInfos)
     
     for (var i = 0; i < resultado.length; i++) {
         var albumExistente = bandaInfos.albums.find(function (album) {
@@ -60,6 +73,9 @@ function formatarJson(resultado) {
                 music: resultado[i].music,
                 mood: resultado[i].mood,
                 color: resultado[i].color,
+                is_liked: resultado[i].is_liked,
+                is_favorite_music: resultado[i].is_favorite_music,
+                
             })   
         } else {
             bandaInfos.albums.push( {
@@ -73,17 +89,19 @@ function formatarJson(resultado) {
                     music: resultado[i].music,
                     mood: resultado[i].mood,
                     color: resultado[i].color,
+                    is_liked: resultado[i].is_liked,
+                    is_favorite_music: resultado[i].is_favorite_music,
                 }]
             })
         }
     }
     
-    console.log('Pós formatação', bandaInfos)
     return bandaInfos;
 }
 
 
 module.exports = {
     listar,
-    buscarPorId
+    buscarPorId,
+    buscarRanking
 }
