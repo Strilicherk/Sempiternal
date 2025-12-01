@@ -99,7 +99,6 @@ CREATE VIEW vw_band_album_music AS
             JOIN
         mood md ON md.id = m.mood_id;
         
-        
 CREATE VIEW vw_band_ranking AS
     SELECT 
         b.id AS band_id,

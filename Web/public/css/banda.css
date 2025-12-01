@@ -8,6 +8,8 @@ main button {
     cursor: pointer;
 }
 
+/* CSS do Banner */
+
 .band__banner {
     height: 400px; 
     
@@ -62,15 +64,30 @@ main button {
 }
 
 .ranking {
-    background: linear-gradient(45deg, #BF953F, #FCF6BA, #B38728);
     color: #000000;
+}
+
+.gold {
+    background: linear-gradient(45deg, #BF953F, #FCF6BA, #B38728);
     box-shadow: 0 2px 5px #B38728;
+}
+
+.silver{
+    background: linear-gradient(45deg, #A0A0A0, #F7F7F7, #A0A0A0);
+    box-shadow: 0 2px 5px #A0A0A0;
+}
+
+.bronze {
+    background: linear-gradient(45deg, #804A00, #CD7F32, #FFAD60);
+    box-shadow: 0 2px 5px #FFAD60;
 }
 
 .genre {
     background-color: rgba(255, 255, 255, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.3);
 }
+
+/* CSS da navbar */
 
 .band__nav {
     display: flex;
@@ -101,10 +118,15 @@ main button {
     border-bottom: 3px solid var(--feeling-angry);
 }
 
-.band__info {
+/* CSS da bio */
+
+.band__content {
+    display: flex;
+    flex-direction: column;
     background-color: var(--bg-medium); 
     padding: 30px 30px;
     border-radius: 0 0 16px 16px; 
+    gap: 15px;
 }
 
 .section__title {
@@ -117,4 +139,131 @@ main button {
     color: var(--text-secondary);
     max-width: 800px;
     white-space: pre-line;
+}
+
+/* CSS dos álbuns e músicas */
+
+details {
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 10px;
+}
+
+summary {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    cursor: pointer;
+}
+
+summary:hover {
+    border: 1px solid var(--feeling-angry);
+    border-radius: 12px;
+}
+
+.album__cover {
+    width: 60px;
+    height: 60px;
+    border-radius: 2px;
+    margin-right: 20px;
+}
+
+.album__info {
+    flex: 1; 
+}
+
+.album__year {
+    color: #888;
+}
+
+.album__musics__list {
+    border-top: 1px solid #333;
+    background-color: #161616;
+    padding: 10px 0;
+    border-radius: 10px;
+}
+
+.music__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 25px;
+}
+
+.music__row:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.music__left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.music__number {
+    color: #555;
+}
+
+/* CSS tag de sentimento. */
+
+.music__mood {
+    font-family: 'Inter';
+    font-size: 0.85rem;
+    padding: 8px 20px;
+    border-radius: 50px;
+    border: 1px solid;
+}
+
+.mood__raiva {
+    color: var(--feeling-angry);
+    border-color: var(--feeling-angry);
+    background: color-mix(in srgb, var(--feeling-angry), transparent 85%);
+}
+
+.mood__angústia {
+    color: var(--feeling-anguish);
+    border-color: var(--feeling-anguish);
+    background: color-mix(in srgb, var(--feeling-anguish), transparent 85%);
+}
+
+.mood__tristeza {
+    color: var(--feeling-sadness);
+    border-color: var(--feeling-sadness);
+    background: color-mix(in srgb, var(--feeling-sadness), transparent 85%);
+}
+
+.mood__solidão {
+    color: var(--feeling-loneliness);
+    border-color: var(--feeling-loneliness);
+    background: color-mix(in srgb, var(--feeling-loneliness), transparent 85%);
+}   
+
+.mood__energia {
+    color: var(--feeling-energy);
+    border-color: var(--feeling-energy);
+    background: color-mix(in srgb, var(--feeling-energy), transparent 85%);
+}
+
+.mood__desafio {
+    color: var(--feeling-challenge);
+    border-color: var(--feeling-challenge);
+    background: color-mix(in srgb, var(--feeling-challenge), transparent 85%);
+}
+
+.mood__catarse {
+    color: var(--feeling-catharsis);
+    border-color: var(--feeling-catharsis);
+    background: color-mix(in srgb, var(--feeling-catharsis), transparent 85%);
+}
+
+/* CSS dos botões interativos. */
+.music__actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.interactive__icon {
+    width: 30px;
+    height: 30px;
 }

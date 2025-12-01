@@ -36,15 +36,18 @@
         </section>
         
         <nav class="band__nav">
-            <button class="nav__item" id="about">SOBRE</button>
-            <button class="nav__item" id="album">ÁLBUNS</button>
+            <button class="nav__item" id="nav-about" onclick="ExibirSobre()">SOBRE</button>
+            <button class="nav__item" id="nav-album" onclick="ExibirAlbuns()">ÁLBUNS</button>
         </nav>
         
-        <section class="band__info">
-            <h2 class="section__title">HISTÓRIA</h2>
-            <p class="band__bio" id="bio-placeholder"></p>
+        <section class="band__content">
+            <div id="sobre">
+                <h2 class="section__title">HISTÓRIA</h2>
+                <p class="band__bio" id="bio-placeholder"></p>
+            </div>
+            
+            <div id="albuns" style="display: none;"></div>
         </section>
-        
     </main>
     <footer>
         <div class="footer__container">
@@ -81,7 +84,7 @@
         var bandaInfos;
         var bandasRanking;
         
-        about.classList.add('active');
+        document.getElementById('nav-about').classList.add('active');
         
         window.onload = async function() {
             var idBanda = new URLSearchParams(window.location.search).get('id');
@@ -128,12 +131,88 @@
             }
             
             document.getElementById('ranking-placeholder').innerText = `Ranking #${ranking}`;
+            if (ranking == 1) {
+                document.getElementById('ranking-placeholder').classList.add('gold')
+            } else if (ranking >= 2 && ranking <= 5) {
+                document.getElementById('ranking-placeholder').classList.add('silver')
+            } else {
+                document.getElementById('ranking-placeholder').classList.add('bronze')
+            }
+            
             document.getElementById('genre-placeholder').innerText = bandaInfos.genre;
             document.getElementById('bio-placeholder').innerText = bandaInfos.about;
+            
+            if (bandaInfos.albums.length > 0) {
+                RenderizarAlbuns(bandaInfos.albums);
+            } else {
+                document.getElementById('albuns').innerHTML = "<h3>Nenhum álbum encontrado.</h3>";
+            }
         }
         
+        function RenderizarAlbuns(listaDeAlbuns) {
+            var htmlGeral = "";
+            
+            for (var i = 0; i < listaDeAlbuns.length; i++) {
+                var album = listaDeAlbuns[i];
+                var htmlMusicas = "";
+
+                for (var j = 0; j < album.musics.length; j++) {
+                    var musica = album.musics[j];
+
+                    htmlMusicas += `
+                        <div class="music__row">
+                            <div class="music__left">
+                                <span class="music__number">${j + 1}</span>
+                                <span class="music__name">${musica.music}</span>
+                                <span class="music__mood mood__${musica.mood.toLowerCase()}">${musica.mood}</span> 
+                            </div>
+                            
+                            <div class="music__actions">
+                                <button class="btn-like" onclick="CurtirMusica(${musica.music_id})">
+                                    <img class="interactive__icon" src="../assets/icons/EmptyLike.png">
+                                </button>
+                                <button onclick="FavoritarMusica(${musica.music_id})">
+                                    <img class="interactive__icon" src="../assets/icons/EmptyStar.png">
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }          
+                
+                htmlGeral += `
+                    <details>
+                        <summary>
+                            <img src="${album.album_cover_path}" alt="Capa ${album.album}" class="album__cover">
+                            <div class="album__info">
+                                <h2>${album.album}</h2>
+                                <h3 class="album__year">${album.album_release_date}</h3>
+                            </div>
+                        </summary>
+                        
+                        <div class="album__musics__list">
+                            ${htmlMusicas} 
+                        </div>
+                    </details>
+                `;
+            }
+
+            document.getElementById('albuns').innerHTML = htmlGeral;
+        }
         
+        function ExibirSobre() {
+            document.getElementById('sobre').style.display = 'block';
+            document.getElementById('albuns').style.display = 'none';
+            document.getElementById('nav-about').classList.add('active');
+            document.getElementById('nav-albuns').classList.remove('active');
+        }
         
+        function ExibirAlbuns() {
+            document.getElementById('sobre').style.display = 'none';
+            document.getElementById('albuns').style.display = 'block';
+            
+            document.getElementById('nav-about').classList.remove('active');
+            document.getElementById('nav-albuns').classList.add('active');
+        }
     </script>
 </body>
 </html>
