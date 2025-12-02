@@ -40,8 +40,14 @@ function buscarRanking() {
     return database.executar(instrucaoSql);
 }
 
+function atualizarFavorito(idBanda, idUsuario) {
+    var instrucaoSql = `UPDATE user SET band_id = ${idBanda} WHERE id = ${idUsuario}`;
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
     listar,
     buscarPorId,
-    buscarRanking
+    buscarRanking,
+    atualizarFavorito
 };

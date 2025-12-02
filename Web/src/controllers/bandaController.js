@@ -49,6 +49,18 @@ function buscarRanking(req, res) {
     });
 }
 
+
+function atualizarFavorito(req, res) {
+    var idBanda = req.body.idBandServer;
+    var idUsuario = req.body.idUserServer;
+
+    bandaModel.atualizarFavorito(idBanda, idUsuario).then(function(resultado) {
+        res.status(200).json(resultado);
+    }).catch(function(erro) {
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
 function formatarJson(resultado) {
     
     var bandaInfos = {
@@ -103,5 +115,6 @@ function formatarJson(resultado) {
 module.exports = {
     listar,
     buscarPorId,
-    buscarRanking
+    buscarRanking,
+    atualizarFavorito
 }

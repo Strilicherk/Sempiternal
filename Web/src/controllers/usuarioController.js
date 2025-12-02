@@ -54,27 +54,22 @@ function cadastrar(req, res) {
     } else if (senha == undefined) {
         res.status(400).send("Sua senha está undefined!");
     } else {
-        // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
-        usuarioModel.cadastrar(nickname, email, senha)
-        .then(
-            function (resultado) {
-                res.json(resultado);
+        usuarioModel.cadastrar(nickname, email, senha).then(function (resultado) {
+            res.json(resultado);
+        }).catch(function (erro) {
+            console.log(erro);
+            console.log(
+                "\nHouve um erro ao realizar o cadastro! Erro: ",
+                erro.sqlMessage
+            );
+            if (erro.errno == 1062) {
+                res.status(409).json(erro.sqlMessage);
+            } else {
+                res.status(500).json(erro.sqlMessage);
             }
-        ).catch(
-            function (erro) {
-                console.log(erro);
-                console.log(
-                    "\nHouve um erro ao realizar o cadastro! Erro: ",
-                    erro.sqlMessage
-                );
-                if (erro.errno == 1062) {
-                    res.status(409).json(erro.sqlMessage);
-                } else {
-                    res.status(500).json(erro.sqlMessage);
-                }
-            }
-        );
-    }
+        }
+    );
+}
 }
 
 module.exports = {

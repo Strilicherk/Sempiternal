@@ -15,5 +15,8 @@ router.get("/buscarRanking", function (req, res) {
     bandaController.buscarRanking(req, res);
 });
 
+router.post("/favoritar", function (req, res) {
+    bandaController.atualizarFavorito(req, res)
+})
 
 module.exports = router;

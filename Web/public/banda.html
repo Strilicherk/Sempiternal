@@ -24,7 +24,7 @@
             <div class="band__header">
                 <div class="band__tags title__icon">
                     <h1 class="band__title" id="band-name-placeholder"></h1>
-                    <button>
+                    <button id="favorite-band-button" onclick="FavoritarBanda()">
                         <img src="" alt="Star icon." id="favorite-icon-placeholder">
                     </button>
                 </div>
@@ -37,7 +37,7 @@
         
         <nav class="band__nav">
             <button class="nav__item" id="nav-about" onclick="ExibirSobre()">SOBRE</button>
-            <button class="nav__item" id="nav-album" onclick="ExibirAlbuns()">ÁLBUNS</button>
+            <button class="nav__item" id="nav-albuns" onclick="ExibirAlbuns()">ÁLBUNS</button>
         </nav>
         
         <section class="band__content">
@@ -46,7 +46,7 @@
                 <p class="band__bio" id="bio-placeholder"></p>
             </div>
             
-            <div id="albuns" style="display: none;"></div>
+            <div id="albuns"></div>
         </section>
     </main>
     <footer>
@@ -98,7 +98,6 @@
                 
                 if (resposta.ok) {
                     bandasRanking = await resposta.json();
-                    console.log(bandasRanking);
                 } else {
                     console.log('Erro ao trazer ranking')
                 }
@@ -116,6 +115,20 @@
             } catch (resposta) {
                 console.log(`#ERRO: ${resposta}`);
             }
+        }
+        
+        function ExibirSobre() {
+            document.getElementById('sobre').style.display = 'flex';
+            document.getElementById('albuns').style.display = 'none';
+            document.getElementById('nav-about').classList.add('active');
+            document.getElementById('nav-albuns').classList.remove('active');
+        }
+        
+        function ExibirAlbuns() {
+            document.getElementById('sobre').style.display = 'none';
+            document.getElementById('albuns').style.display = 'flex';
+            document.getElementById('nav-about').classList.remove('active');
+            document.getElementById('nav-albuns').classList.add('active');
         }
         
         function PopularCampos() {
@@ -155,10 +168,12 @@
             for (var i = 0; i < listaDeAlbuns.length; i++) {
                 var album = listaDeAlbuns[i];
                 var htmlMusicas = "";
-
+                
                 for (var j = 0; j < album.musics.length; j++) {
                     var musica = album.musics[j];
-
+                    var likeIcon = musica.is_liked ? '../assets/icons/FilledLike.png' : '../assets/icons/EmptyLike.png';
+                    var favoriteIcon = musica.is_favorite_music ? '../assets/icons/FilledStar.png' : '../assets/icons/EmptyStar.png';
+                    
                     htmlMusicas += `
                         <div class="music__row">
                             <div class="music__left">
@@ -168,11 +183,11 @@
                             </div>
                             
                             <div class="music__actions">
-                                <button class="btn-like" onclick="CurtirMusica(${musica.music_id})">
-                                    <img class="interactive__icon" src="../assets/icons/EmptyLike.png">
+                                <button class="btn-like" onclick="CurtirMusica(${musica.music_id})" id ="like-button-${musica.music_id}">
+                                    <img class="interactive__icon" src="${likeIcon}" id="like-icon-${musica.music_id}">
                                 </button>
-                                <button onclick="FavoritarMusica(${musica.music_id})">
-                                    <img class="interactive__icon" src="../assets/icons/EmptyStar.png">
+                                <button onclick="FavoritarMusica(${musica.music_id})" id ="favorite-button-${musica.music_id}">
+                                    <img class="interactive__icon star-music" src="${favoriteIcon}" id="favorite-icon-${musica.music_id}">
                                 </button>
                             </div>
                         </div>
@@ -185,7 +200,7 @@
                             <img src="${album.album_cover_path}" alt="Capa ${album.album}" class="album__cover">
                             <div class="album__info">
                                 <h2>${album.album}</h2>
-                                <h3 class="album__year">${album.album_release_date}</h3>
+                                <span class="album__year">${album.album_release_date}</span>
                             </div>
                         </summary>
                         
@@ -195,24 +210,142 @@
                     </details>
                 `;
             }
-
+            
             document.getElementById('albuns').innerHTML = htmlGeral;
         }
         
-        function ExibirSobre() {
-            document.getElementById('sobre').style.display = 'block';
-            document.getElementById('albuns').style.display = 'none';
-            document.getElementById('nav-about').classList.add('active');
-            document.getElementById('nav-albuns').classList.remove('active');
+        function CurtirMusica(id) {
+            var botao = document.getElementById(`like-button-${id}`);
+            
+            if (botao.disabled) {
+                return; 
+            } else {
+                botao.disabled = true;
+            }
+            
+            var elemento = document.getElementById(`like-icon-${id}`);
+            var musicaCurtida = elemento.src.endsWith('FilledLike.png');
+            elemento.src = musicaCurtida ? '../assets/icons/EmptyLike.png' : '../assets/icons/FilledLike.png';
+            
+            // var idUsuario = sessionStorage.ID_USUARIO; 
+            var idUsuario = 1;
+            console.log(musicaCurtida);
+            fetch("/musicas/curtir", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    musicIdServer: id,
+                    userIdServer: idUsuario,
+                    acao: musicaCurtida ? 'descurtir' : 'curtir'
+                }),
+            })
+            .then(function (resposta) {
+                if (resposta.ok)  {
+                    console.log("Like atualizado no banco");
+                } else {
+                    console.log("Erro ao atualizar like");
+                }
+            }).catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+            }).finally(() => {
+                botao.disabled = false;
+            });
         }
         
-        function ExibirAlbuns() {
-            document.getElementById('sobre').style.display = 'none';
-            document.getElementById('albuns').style.display = 'block';
+        function FavoritarMusica(id) {
+            var botao = document.getElementById(`favorite-button-${id}`);
             
-            document.getElementById('nav-about').classList.remove('active');
-            document.getElementById('nav-albuns').classList.add('active');
+            if (botao.disabled) {
+                return; 
+            } else {
+                botao.disabled = true;
+            }
+            
+            var elemento = document.getElementById(`favorite-icon-${id}`);
+            var musicaFavorita = elemento.src.endsWith('FilledStar.png');
+
+            if (!musicaFavorita) {
+                var favoritoAnterior = document.querySelector('.star-music[src$="FilledStar.png"]');
+                
+                if (favoritoAnterior && favoritoAnterior.id !== elemento.id) {
+                    favoritoAnterior.src = '../assets/icons/EmptyStar.png';
+                }
+            }
+            
+            elemento.src = musicaFavorita ? '../assets/icons/EmptyStar.png' : '../assets/icons/FilledStar.png';
+            
+            // var idUsuario = sessionStorage.ID_USUARIO; 
+            var idUsuario = 1;
+            
+            fetch("/musicas/favoritar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    idUserServer: idUsuario,
+                    idMusicServer: musicaFavorita ? null : id,
+                    
+                }),
+            }).then (function (resposta) {
+                console.log(resposta)
+                if (resposta.ok) {
+                    
+                } else {
+                    elemento.src = musicaFavorita ? '../assets/icons/FilledStar.png' : '../assets/icons/EmptyStar.png';
+                }
+            }).catch(function (resposta) {
+                elemento.src = musicaFavorita ? '../assets/icons/FilledStar.png' : '../assets/icons/EmptyStar.png';
+                console.log(`#ERRO: ${resposta}`);
+            }).finally(function() {
+                botao.disabled = false;
+            });
         }
+        
+        function FavoritarBanda() {
+            var id = bandaInfos.band_id;
+            var botao = document.getElementById('favorite-band-button');
+            
+            if (botao.disabled) {
+                return; 
+            } else {
+                botao.disabled = true;
+            }
+            
+            var elemento = document.getElementById('favorite-icon-placeholder');
+            var bandaFavorita = elemento.src.endsWith('FilledStar.png');            
+            elemento.src = bandaFavorita ? '../assets/icons/EmptyStar.png' : '../assets/icons/FilledStar.png';
+            
+            // var idUsuario = sessionStorage.ID_USUARIO; 
+            var idUsuario = 1;
+            
+            fetch("/bandas/favoritar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    idUserServer: idUsuario,
+                    idBandServer: bandaFavorita ? null : id,
+                    
+                }),
+            }).then (function (resposta) {
+                console.log(resposta)
+                if (resposta.ok) {
+                    
+                } else {
+                    elemento.src = bandaFavorita ? '../assets/icons/FilledStar.png' : '../assets/icons/EmptyStar.png';
+                }
+            }).catch(function (resposta) {
+                elemento.src = bandaFavorita ? '../assets/icons/FilledStar.png' : '../assets/icons/EmptyStar.png';
+                console.log(`#ERRO: ${resposta}`);
+            }).finally(function() {
+                botao.disabled = false;
+            });
+        }
+
     </script>
 </body>
 </html>

@@ -142,6 +142,11 @@ main button {
 }
 
 /* CSS dos álbuns e músicas */
+#albuns {
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+}
 
 details {
     background-color: #1a1a1a;
@@ -173,6 +178,7 @@ summary:hover {
 }
 
 .album__year {
+    font-family: 'Inter';
     color: #888;
 }
 
