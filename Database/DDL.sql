@@ -99,6 +99,7 @@ CREATE VIEW vw_band_album_music AS
             JOIN
         mood md ON md.id = m.mood_id;
         
+-- Ranking de bandas
 CREATE VIEW vw_band_ranking AS
     SELECT 
         b.id AS band_id,
@@ -115,4 +116,40 @@ CREATE VIEW vw_band_ranking AS
         music_like ml ON ml.music_id = m.id
     GROUP BY b.id , b.name , b.cover_path
     ORDER BY total_likes DESC;
+    
+-- Ranking de músicas
+CREATE VIEW vw_music_ranking AS
+	SELECT 
+		m.id AS music_id,
+		m.name AS music_name,
+		md.name AS mood_name,
+		md.color AS mood_color,
+		COUNT(ml.user_id) AS total_likes
+	FROM
+		music m
+			JOIN
+		mood md ON m.mood_id = md.id
+			LEFT JOIN
+		music_like ml ON m.id = ml.music_id
+	GROUP BY 
+		m.id, m.name, md.name, md.color
+	ORDER BY 
+		total_likes DESC;
+    
+CREATE VIEW vw_mood_ranking AS
+SELECT 
+    md.id AS mood_id,
+    md.name AS mood_name,
+    md.color AS mood_color,
+    COUNT(ml.user_id) AS total_likes
+FROM
+    mood md
+        JOIN
+    music m ON m.mood_id = md.id
+        LEFT JOIN
+    music_like ml ON m.id = ml.music_id
+GROUP BY 
+    md.id, md.name, md.color
+ORDER BY 
+    total_likes DESC;
         

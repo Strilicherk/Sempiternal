@@ -1,7 +1,17 @@
 USE sempiternal;
 
-INSERT INTO user (nickname, email, password) VALUES
-	('Strilicherk', 'matheuscherk@hotmail.com','Sempiternal#100');
+INSERT INTO user (nickname, email, password, band_id, music_id) VALUES
+	('Strilicherk', 'matheuscherk@hotmail.com','Sempiternal#100', null, null),
+    ('Maggot666', 'corey.taylor@gmail.com', 'Sempiternal@2025', 1, 10),
+	('HybridSoldier', 'chester.bennington@gmail.com', 'Sempiternal@2025', 8, 1),
+	('SempiternalSpirit', 'oli.sykes@gmail.com', 'Sempiternal@2025', 4, 20),
+	('ToxicitySystem', 'serj.tankian@gmail.com', 'Sempiternal@2025', 7, 15),
+	('DeftonesVibe', 'chino.moreno@gmail.com', 'Sempiternal@2025', 3, 33),
+	('MetalcoreKing', 'matt.tuck@gmail.com', 'Sempiternal@2025', 5, 40),
+	('EmoKid2000', 'vic.fuentes@gmail.com', 'Sempiternal@2025', 6, 37),
+	('GothicMotion', 'chris.motionless@gmail.com', 'Sempiternal@2025', 9, 49),
+	('KornKid', 'jon.davis@gmail.com', 'Sempiternal@2025', 2, 27),
+	('ThreeDaysFan', 'adam.gontier@gmail.com', 'Sempiternal@2025', 10, 45);
 
 INSERT INTO genre (name) VALUES 
 	('New Metal'), 
@@ -146,26 +156,18 @@ INSERT INTO music (name, album_id, mood_id) VALUES
 	('Masterpiece', 32, 7);
 
 INSERT INTO music_like (user_id, music_id) VALUES
-	(1, 1),
-	(1, 3),
-	(1, 5),
-	(1, 7),
-	(1, 10),
-	(1, 12),
-	(1, 13),
-	(1, 15),
-	(1, 16),
-	(1, 20),
-	(1, 21),
-	(1, 23),
-	(1, 25),
-	(1, 27),
-	(1, 33),
-	(1, 37),
-	(1, 40),
-	(1, 44),
-	(1, 49),
-	(1, 50);
+	(1, 1), (1, 3), (1, 5), (1, 7), (1, 10), (1, 12), (1, 13), (1, 15),
+	(1, 16), (1, 20), (1, 21), (1, 23), (1, 25), (1, 27), (1, 33), (1, 37),
+	(1, 40), (1, 44), (1, 49), (1, 50), (2, 4), (2, 5), (2, 6), (2, 7), 
+    (2, 10), (2, 11), (3, 1), (3, 2), (3, 3), (3, 4), (3, 7), (3, 15),
+	(4, 20), (4, 21), (4, 22), (4, 23), (4, 24), (4, 49),
+	(5, 14), (5, 15), (5, 16), (5, 17), (5, 1), (5, 10),
+	(6, 31), (6, 32), (6, 33), (6, 34), (6, 35), (6, 1),
+	(7, 40), (7, 41), (7, 42), (7, 1), (7, 10), (7, 20),
+	(8, 36), (8, 37), (8, 38), (8, 39), (8, 20), (8, 3),
+	(9, 48), (9, 49), (9, 50), (9, 1), (9, 2), (9, 10),
+	(10, 26), (10, 27), (10, 28), (10, 1), (10, 5), (10, 15),
+	(11, 44), (11, 45), (11, 46), (11, 47), (11, 1), (11, 4);
 
 SELECT * FROM user;
 SELECT * FROM genre;
@@ -178,23 +180,22 @@ SELECT * FROM music;
 SELECT * FROM music_like;
 SELECT * FROM vw_band_album_music;
 
--- Query feita para puxar todos os dados necessários da página da banda, ou seja, trazer de uma única vez:
--- nome da banda, bio, banner, gênero, nome do álbum, capa, data de lançamento, músicas que fazem parte, sentimento da música, 
--- cor do sentimento, se é a banda favorita e se é a música favorita.
+-- Dados da página da banda específica
 SELECT 
     vw.*,
     IF(ml.user_id IS NOT NULL, 1, 0) AS is_liked,
     IF(vw.band_id = u.band_id, 1, 0) AS is_favorite_band,
     IF(vw.music_id = u.music_id, 1, 0) AS is_favorite_music
-FROM
-    vw_band_album_music AS vw
-        LEFT JOIN
-    music_like ml ON vw.music_id = ml.music_id
-        AND ml.user_id = 1
-        LEFT JOIN
-    user u ON u.id = 1
-		WHERE vw.band_id = 4;
-        
+FROM vw_band_album_music AS vw 
+	LEFT JOIN music_like ml ON vw.music_id = ml.music_id AND ml.user_id = 1
+	LEFT JOIN user u ON u.id = 1 
+    WHERE vw.band_id = 4;
+
+-- Ranking das bandas;
 SELECT * FROM vw_band_ranking;
-    
+
+-- Ranking de músicas;
+SELECT * FROM vw_music_ranking;
+
+SELECT * FROM vw_mood_ranking;
     

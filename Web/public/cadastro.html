@@ -5,31 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/estilo.css">
     <link rel="stylesheet" href="css/cadastro_login.css">
-    <title>Sempiternal - Cadastro</title>
+    <script src="js/componentes.js"></script>
+    <title>Cadastro</title>
 </head>
 <body>
-    <header>
-        <nav>
-            <a href="index.html" class="header__logo"> <h2>SEMPITERNAL</h2> </a>
-            <div class="header__nav">
-                <div class="ranking__banda">
-                    <ul class="navbar__items">
-                        <li><a href="navegacao.html" class="navbar__items__options">Bandas</a></li>
-                    </ul>
-                </div>
-                <div class="login__cadastro">
-                    <ul class="navbar__items">
-                        <li>
-                            <a href="login.html" class="navbar__items__options">LOGIN</a>
-                        </li>
-                        <li>
-                            <a href="cadastro.html" class="navbar__items__options"><span class="botao">CADASTRE-SE</span></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+    <header id="header-placeholder"></header>
     
     <main>
         <div id="modal__card"></div>
@@ -77,6 +57,8 @@
     </main>
     
     <script>
+        CarregarHeader();
+
         /* 
         Chama cadastrar.
         valida se o nickname atende.

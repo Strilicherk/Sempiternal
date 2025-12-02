@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/home.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/componentes.js"></script>
+    <title>Home</title>
+    
+    
+</head>
+<body>
+    
+    <header id="header-placeholder"></header>
+    
+    <main>
+        <section class="dashboard__header">
+            <h1 class="page__title">DASHBOARD DA COMUNIDADE</h1>
+            <p class="page__subtitle">Veja o que a comunidade está sentindo em tempo real.</p>
+        </section>
+        
+        <section>
+            <div class="section__header">
+                <h2 class="section__title">MÚSICAS EM ALTA (TOP 10)</h2>
+                <p>Top 10 baseado nas curtidas. A cor da barra representa o sentimento base.</p>
+            </div>
+            <div class="chart__container">
+                <canvas id="chartMusicas"></canvas>
+            </div>
+        </section>
+        
+        <section class="dashboard__section">
+            <div class="section__header">
+                <h2 class="section__title">RANKING DE SENTIMENTOS</h2>
+                <p>Os sentimentos mais presentes na comunidade, com base nas curtidas.</p>
+            </div>
+            <div class="chart__container medium__chart">
+                <canvas id="chartSentimentos"></canvas>
+            </div>
+        </section>
+        
+        <section class="dashboard__section">
+            <div class="section__header">
+                <h2 class="section__title">BANDAS EM ALTA (TOP 5)</h2>
+                <p>As 5 bandas mais populares com base no número de votos.</p>
+            </div>
+            
+            <div class="ranking__grid" id="ranking-placeholder"></div>
+        </section>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+    
+    <script>
+        CarregarHeader()
+        CarregarFooter()
+        
+        var rankingMusicas;
+        var rankingSentimentos;
+        var rankingBandas;
+        
+        window.onload = async function () {
+            idUsuario = sessionStorage.ID_USUARIO;
+
+            if (idUsuario == undefined) {
+                window.location.href = 'cadastro.html';
+                return;
+            }
+
+            try {
+                resposta = await fetch(`/musicas/buscarRanking`);
+                
+                if (resposta.ok) {
+                    rankingMusicas = await resposta.json();
+                } else {
+                    console.log(resposta)
+                }
+                
+                resposta = await fetch(`/musicas/buscarRankingSentimentos`);
+                
+                if (resposta.ok) {
+                    rankingSentimentos = await resposta.json();
+                } else {
+                    console.log(resposta)
+                }
+                
+                resposta = await fetch(`/bandas/buscarRanking`);
+                
+                if (resposta.ok) {
+                    rankingBandas = await resposta.json();
+                } else {
+                    console.log(resposta)
+                }
+                
+                if (rankingMusicas) RenderizarRankingMusicas();
+                if (rankingSentimentos) RenderizarRankingSentimentos();
+                if (rankingBandas) RenderizarRankingBandas();
+            } catch (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+            }
+        }
+        
+        function RenderizarRankingMusicas() {
+            var ctxMusicas = document.getElementById('chartMusicas');
+            
+            if (ctxMusicas) {
+                var labels = [];
+                var data = [];
+                var backgroundColors = [];
+                
+                for (var i = 0; i < 10; i++) {
+                    labels.push(rankingMusicas[i].music_name);
+                    data.push(rankingMusicas[i].total_likes);
+                    backgroundColors.push(rankingMusicas[i].mood_color);
+                }
+                
+                
+                new Chart(ctxMusicas, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Votos',
+                            data: data,
+                            backgroundColor: backgroundColors,
+                            borderRadius: 4,
+                            barThickness: 80,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { 
+                                titleFont: { 
+                                    family: 'Archivo Black',
+                                    size: 24
+                                },
+                                
+                                bodyFont: {
+                                    family: 'Inter',
+                                    size: 18,
+                                    weight: 'bold'
+                                },
+                                
+                                padding: 15, 
+                                backgroundColor: '#161616', 
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: '#333' },
+                                ticks: { 
+                                    color: '#a0a0a0',
+                                    font: {
+                                        size: 14,
+                                        family: 'Inter'
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { 
+                                    color: '#a0a0a0', 
+                                    font: { 
+                                        family: 'Inter',
+                                        size: 14,
+                                        weight: 'bold'
+                                    } 
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        function RenderizarRankingSentimentos() {
+            var ctxSentimentos = document.getElementById('chartSentimentos');
+            
+            if (ctxSentimentos) {
+                var labels = [];
+                var data = [];
+                var backgroundColors = [];
+                
+                for (var i = 0; i < rankingSentimentos.length; i++) {
+                    labels.push(rankingSentimentos[i].mood_name);
+                    data.push(rankingSentimentos[i].total_likes);
+                    backgroundColors.push(rankingSentimentos[i].mood_color);
+                }
+                
+                new Chart(ctxSentimentos, {
+                    type: 'polarArea',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Votos',
+                            data: data,
+                            backgroundColor: backgroundColors,
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                grid: { 
+                                    color: '#333' 
+                                },
+                                ticks: { 
+                                    display: false,
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { 
+                                    font: { 
+                                        family: 'Inter',
+                                        size: 18
+                                    }, 
+                                    padding: 20,
+                                }
+                            },
+                            tooltip: {
+                                titleFont: { 
+                                    family: 'Archivo Black',
+                                    size: 24
+                                },
+                                bodyFont: { 
+                                    family: 'Inter',
+                                    size: 18,
+                                },
+                                padding: 10
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        function RenderizarRankingBandas() {
+            var container = document.getElementById('ranking-placeholder');
+            var htmlFinal = '';
+            
+            for (var i = 0; i < 5; i++) {
+                var banda = rankingBandas[i];
+                var posicao = i + 1;
+                
+                var classeCard = 'silver__card'; 
+                var classeBadge = 'second';
+                
+                if (posicao === 1) {
+                    classeCard = 'gold__card';
+                    classeBadge = 'first';
+                }
+                
+                htmlFinal += `
+                    <a href="banda.html?id=${banda.band_id}" class="rank__card ${classeCard}">
+                        <div class="rank__badge ${classeBadge}">${posicao}º</div>
+                        <div class="img__box">
+                            <img src="${banda.cover_path}" alt="${banda.band_name}">
+                        </div>
+                        <div class="rank__info">
+                            <h3>${banda.band_name}</h3>
+                            <span class="vote-count">VOTOS: ${banda.total_likes}</span>
+                        </div>
+                    </a>
+                `;
+            }
+            
+            container.innerHTML = htmlFinal;
+        }
+    </script>
+</body>
+</html>

@@ -5,20 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/estilo.css"/>
     <link rel="stylesheet" href="css/banda.css"/>
-    <title>Document</title>
+    <script src="js/componentes.js"></script>
+    <title>Bandas</title>
 </head>
 <body>
-    <header>
-        <nav>
-            <a href="index.html" class="header__logo"> <h2>SEMPITERNAL</h2> </a>
-            <ul class="header__nav logado">
-                <li><a href="index.html" class="navbar__items__options">Home</a></li>
-                <li><a href="navigation.html" class="navbar__items__options">Bandas</a></li>
-                <li><a href="profile.html" class="navbar__items__options">Perfil</a></li>
-                <li> <button onclick="Logout()">Sair</button> </li>
-            </ul>
-        </nav>
-    </header>
+    <header id="header-placeholder"></header>
     <main>
         <section class="band__banner" id="banner-placeholder">
             <div class="band__header">
@@ -49,47 +40,26 @@
             <div id="albuns"></div>
         </section>
     </main>
-    <footer>
-        <div class="footer__container">
-            <div class=" footer__identidade">
-                <a href="index.html"> <h2 class="footer__logo">SEMPITERNAL</h2> </a>
-                <div class="footer__social">
-                    <a href="https://www.linkedin.com/in/strilicherk/" class="social__link">
-                        <img src="assets/icons/LinkedIn.png" alt="LinkedIn"> 
-                        <span>LinkedIn</span>
-                    </a>
-                    <a href="https://github.com/Strilicherk" class="social__link">
-                        <img src="assets/icons/GitHub.png" alt="GitHub"> 
-                        <span>GitHub</span>
-                    </a>
-                </div>
-            </div>
-            
-            <nav class="footer__nav">
-                <ul class="footer__items">
-                    <li><a href="register.html">Cadastre-se</a></li>
-                    <li><a href="login.html">Login</a></li>
-                    <li><a href="navigation.html">Bandas</a></li>
-                </ul>
-            </nav>
-            
-            <div class="footer__legal">
-                <p>Todos os direitos (não) reservados.</p>
-                <p>Um projeto de faculdade.</p>
-            </div>
-        </div>
-    </footer>
+    <footer id="footer-placeholder"></footer>
     
     <script>
+        CarregarHeader();
+        CarregarFooter();
+
         var bandaInfos;
         var bandasRanking;
         
         document.getElementById('nav-about').classList.add('active');
         
         window.onload = async function() {
+            idUsuario = sessionStorage.ID_USUARIO;
+
+            if (idUsuario == 'undefined') {
+                window.location.href = 'cadastro.html';
+                return;
+            }
+
             var idBanda = new URLSearchParams(window.location.search).get('id');
-            // idUsuario = sessionStorage.ID_USUARIO;
-            var idUsuario = 1;
             
             try {
                 var resposta;
@@ -115,6 +85,7 @@
             } catch (resposta) {
                 console.log(`#ERRO: ${resposta}`);
             }
+
         }
         
         function ExibirSobre() {

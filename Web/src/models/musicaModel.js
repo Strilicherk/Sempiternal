@@ -26,10 +26,21 @@ function atualizarFavorito(idMusica, idUsuario) {
     return database.executar(instrucaoSql);
 }
 
+function buscarRanking() {
+    var instrucaoSql = `SELECT * FROM vw_music_ranking`;
+    return database.executar(instrucaoSql);
+}
+
+function buscarRankingSentimentos() {
+    var instrucaoSql = `SELECT * FROM vw_mood_ranking`;
+    return database.executar(instrucaoSql);
+}
 
 module.exports = {
     verificarCurtida,
     curtir,
     descurtir,
     atualizarFavorito,
+    buscarRanking,
+    buscarRankingSentimentos
 }

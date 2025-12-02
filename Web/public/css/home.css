@@ -1,0 +1,157 @@
+main {
+    margin: 4rem auto;
+    gap: 6rem; 
+}
+
+/* CSS dos títulos e subtitulos das sections */
+.dashboard__header {
+    border-bottom: 1px solid #333;
+    padding-bottom: 1rem;
+}
+
+.page__title {
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+}
+
+.page__subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+.section__header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section__title {
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.section__header p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.dashboard__section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* CSS dos gráficos */
+
+.chart__container {
+    height: 450px;
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.medium__chart {
+    width: 50%;
+    justify-self: center;
+}
+
+/* CSS das KPIs */
+
+.ranking__grid {
+    width: 100%;
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.rank__card {
+    width: 100px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    
+    position: relative;
+    
+    background-color: var(--bg-medium);
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 20px 15px;
+    
+    transition: transform 0.3s, border-color 0.3s;
+    cursor: pointer;
+}
+
+.silver__card:hover {
+    transform: translateY(-10px);
+    border-color: var(--text-secondary);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
+
+.gold__card {
+    border-color: var(--feeling-energy);
+}
+
+.gold__card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 0 15px rgba(234, 179, 8, 0.1);
+}
+
+.rank__badge {
+    position: absolute;
+    top: -12px;
+    
+    color: black;
+    
+    padding: 5px 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+.first {
+    background-color: var(--feeling-energy);
+}
+
+.second {
+    background-color: #333;
+    color: white;
+}
+
+.img__box {
+    width: 100%;
+    height: 300px;
+
+    margin-bottom: 15px;
+}
+
+.img__box img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.rank__info {
+    text-align: center;
+    width: 100%;
+}
+
+.rank__info h3 {
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.vote__count {
+    font-family: 'Inter';
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+    border-top: 1px solid #333;
+    padding-top: 10px;
+}

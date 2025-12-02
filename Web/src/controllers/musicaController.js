@@ -39,7 +39,36 @@ function atualizarFavorito(req, res) {
     });
 }
 
+function buscarRanking(req, res) {
+    musicaModel.buscarRanking().then(function (resultado) {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(200).json([]);
+        }
+    }).catch(function (erro) {
+        console.log(erro);
+        console.log("Houve um erro ao buscar as bandas: ", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
+function buscarRankingSentimentos(req, res) {
+    musicaModel.buscarRankingSentimentos().then(function (resultado) {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(200).json([]);
+        }
+    }).catch(function (erro) {
+        console.log(erro);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
 module.exports = {
     curtir,
     atualizarFavorito,
+    buscarRanking,
+    buscarRankingSentimentos
 }

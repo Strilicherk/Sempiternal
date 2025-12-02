@@ -35,7 +35,6 @@ function buscarRanking() {
     var instrucaoSql = `
         SELECT * FROM vw_band_ranking;
     `
-
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
 }

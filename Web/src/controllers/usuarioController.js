@@ -9,21 +9,9 @@ function autenticar(req, res) {
     } else if (senha == undefined) {
         res.status(404).send("Senha não encontrada.");
     } else {
-        usuarioModel.autenticar(email, senha)
-        .then(
-            function (resultadoAutenticar) {
-                console.log(`\nResultados encontrados: ${resultadoAutenticar.length}`);
-                console.log(`Resultados: ${JSON.stringify(resultadoAutenticar)}`); // transforma JSON em String
-                
+        usuarioModel.autenticar(email, senha).then(function (resultadoAutenticar) {
                 if (resultadoAutenticar.length == 1) {
-                    console.log(resultadoAutenticar);
-                    
-                    res.status(200).json(
-                        {
-                            id: resultadoAutenticar[0].ID_USUARIO,
-                            nickname: resultadoAutenticar[0].NICKNAME
-                        }
-                    );
+                    res.status(200).json(resultadoAutenticar[0]);
                 } else if (resultadoAutenticar.length == 0) {
                     res.status(404).send("Email e/ou senha inválido(s)");
                 } else {
@@ -41,12 +29,10 @@ function autenticar(req, res) {
 }
 
 function cadastrar(req, res) {
-    // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
     var nickname = req.body.nicknameServer;
     var email = req.body.emailServer;
     var senha = req.body.senhaServer;
     
-    // Faça as validações dos valores
     if (nickname == undefined) {
         res.status(400).send("Seu nickname está undefined!");
     } else if (email == undefined) {
