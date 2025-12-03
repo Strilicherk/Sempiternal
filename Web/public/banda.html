@@ -45,47 +45,51 @@
     <script>
         CarregarHeader();
         CarregarFooter();
-
+        
         var bandaInfos;
         var bandasRanking;
         
         document.getElementById('nav-about').classList.add('active');
         
         window.onload = async function() {
-            idUsuario = sessionStorage.ID_USUARIO;
-
-            if (idUsuario == 'undefined') {
+            idUsuario = localStorage.ID_USUARIO;
+            
+            if (idUsuario == undefined) {
                 window.location.href = 'cadastro.html';
                 return;
             }
-
+            
             var idBanda = new URLSearchParams(window.location.search).get('id');
             
             try {
                 var resposta;
                 
-                resposta = await fetch(`/bandas/buscarRanking`);
+                resposta = await fetch(`/bandas/buscarRankingBandas`);
                 
                 if (resposta.ok) {
                     bandasRanking = await resposta.json();
                 } else {
-                    console.log('Erro ao trazer ranking')
+                    var erro = await resposta.json();
+                    console.log(erro);
+                    MostrarFeedback(erro, false);
                 }
                 
-                resposta = await fetch(`/bandas/buscar/${idBanda}?idUsuario=${idUsuario}`)
+                resposta = await fetch(`/bandas/buscarBandaPorId/${idBanda}?idUsuario=${idUsuario}`)
                 
                 if (resposta.ok) {
                     bandaInfos = await resposta.json();
-                    console.log(bandaInfos);
                 } else {
-                    console.log('Erro ao trazer as informações da banda')
+                    var erro = await resposta.json();
+                    console.log(erro);
+                    MostrarFeedback(erro, false);
                 }
                 
                 PopularCampos();
-            } catch (resposta) {
-                console.log(`#ERRO: ${resposta}`);
+            } catch (erro) {
+                console.log(erro);
+                MostrarFeedback(erro, false);
             }
-
+            
         }
         
         function ExibirSobre() {
@@ -194,14 +198,13 @@
                 botao.disabled = true;
             }
             
+            var idUsuario = localStorage.ID_USUARIO;
             var elemento = document.getElementById(`like-icon-${id}`);
             var musicaCurtida = elemento.src.endsWith('FilledLike.png');
             elemento.src = musicaCurtida ? '../assets/icons/EmptyLike.png' : '../assets/icons/FilledLike.png';
             
-            // var idUsuario = sessionStorage.ID_USUARIO; 
-            var idUsuario = 1;
-            console.log(musicaCurtida);
-            fetch("/musicas/curtir", {
+            
+            fetch("/musicas/curtirMusica", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -211,15 +214,13 @@
                     userIdServer: idUsuario,
                     acao: musicaCurtida ? 'descurtir' : 'curtir'
                 }),
-            })
-            .then(function (resposta) {
-                if (resposta.ok)  {
-                    console.log("Like atualizado no banco");
-                } else {
-                    console.log("Erro ao atualizar like");
+            }).then(async function (resposta) {
+                if (!resposta.ok) {
+                    var mensagemErro = await resposta.json();
+                    MostrarFeedback(mensagemErro, false);
                 }
-            }).catch(function (resposta) {
-                console.log(`#ERRO: ${resposta}`);
+            }).catch(function (erro) {
+                MostrarFeedback("Erro de conexão ou falha na API.", false);
             }).finally(() => {
                 botao.disabled = false;
             });
@@ -236,7 +237,7 @@
             
             var elemento = document.getElementById(`favorite-icon-${id}`);
             var musicaFavorita = elemento.src.endsWith('FilledStar.png');
-
+            
             if (!musicaFavorita) {
                 var favoritoAnterior = document.querySelector('.star-music[src$="FilledStar.png"]');
                 
@@ -247,10 +248,9 @@
             
             elemento.src = musicaFavorita ? '../assets/icons/EmptyStar.png' : '../assets/icons/FilledStar.png';
             
-            // var idUsuario = sessionStorage.ID_USUARIO; 
-            var idUsuario = 1;
+            var idUsuario = localStorage.ID_USUARIO;
             
-            fetch("/musicas/favoritar", {
+            fetch("/usuarios/favoritarMusica", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -260,16 +260,15 @@
                     idMusicServer: musicaFavorita ? null : id,
                     
                 }),
-            }).then (function (resposta) {
-                console.log(resposta)
-                if (resposta.ok) {
-                    
-                } else {
+            }).then (async function (resposta) {
+                if (!resposta.ok) {
                     elemento.src = musicaFavorita ? '../assets/icons/FilledStar.png' : '../assets/icons/EmptyStar.png';
+                    var erro = await resposta.json();
+                    MostrarFeedback(erro, false);
                 }
             }).catch(function (resposta) {
                 elemento.src = musicaFavorita ? '../assets/icons/FilledStar.png' : '../assets/icons/EmptyStar.png';
-                console.log(`#ERRO: ${resposta}`);
+                MostrarFeedback("Erro de conexão. Tente novamente.", false);
             }).finally(function() {
                 botao.disabled = false;
             });
@@ -289,10 +288,9 @@
             var bandaFavorita = elemento.src.endsWith('FilledStar.png');            
             elemento.src = bandaFavorita ? '../assets/icons/EmptyStar.png' : '../assets/icons/FilledStar.png';
             
-            // var idUsuario = sessionStorage.ID_USUARIO; 
-            var idUsuario = 1;
+            var idUsuario = localStorage.ID_USUARIO;
             
-            fetch("/bandas/favoritar", {
+            fetch("/usuarios/favoritarBanda", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -302,21 +300,21 @@
                     idBandServer: bandaFavorita ? null : id,
                     
                 }),
-            }).then (function (resposta) {
-                console.log(resposta)
-                if (resposta.ok) {
-                    
-                } else {
+            }).then (async function (resposta) {
+                if (!resposta.ok) {
                     elemento.src = bandaFavorita ? '../assets/icons/FilledStar.png' : '../assets/icons/EmptyStar.png';
+                    var erro = await resposta.json();
+                    MostrarFeedback(erro, false);
                 }
             }).catch(function (resposta) {
                 elemento.src = bandaFavorita ? '../assets/icons/FilledStar.png' : '../assets/icons/EmptyStar.png';
-                console.log(`#ERRO: ${resposta}`);
+                MostrarFeedback("Erro de conexão. Tente novamente.", false);
             }).finally(function() {
                 botao.disabled = false;
             });
         }
-
     </script>
+    
+    <div id="modal-global" style="display: none;"></div>
 </body>
 </html>

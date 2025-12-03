@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/perfil.css">
+    <script src="js/componentes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Perfil</title>
+</head>
+<body>
+    
+    <header id="header-placeholder"></header>
+    
+    <main>
+        <section class="profile__header">
+            <h2 id="nickname-placeholder">Alex Sempiternal</h2>
+            <div class="user__favorites">
+                <div class="fav__box">
+                    <div class="label__icon">
+                        <span class="fav__label">Banda Favorita </span>
+                        <img src="../assets/icons/FilledStar.png" class="favorite__icon">
+                    </div>
+                    <h2 class="fav__value" id="favorite-band-placeholder"></h2>
+                </div>
+                <div class="fav__box">
+                    <div class="label__icon">
+                        <span class="fav__label">Música Favorita </span>
+                        <img src="../assets/icons/FilledStar.png" class="favorite__icon">
+                    </div>
+                    <h2 class="fav__value" id="favorite-music-placeholder"></h2>
+                </div>
+            </div>
+        </section>
+        
+        <section class="profile__content">
+            <div class="music__container">
+                <h3>MINHAS MÚSICAS</h3>
+                <div class="music__list" id="music-list-placeholder"></div>
+            </div>
+            
+            <div class="radar__container">
+                <h3 class="column-title">RADAR DE SENTIMENTOS</h3>
+                
+                <div class="radar-wrapper">
+                    <canvas id="chartRadarPerfil"></canvas>
+                </div>
+            </div>
+            
+        </section>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+    
+    <script>
+        CarregarHeader();
+        CarregarFooter();
+        
+        window.onload = async function () {
+            var nickname = localStorage.NICKNAME;
+            var idUsuario = localStorage.ID_USUARIO;
+            
+            if (nickname) {
+                document.getElementById('nickname-placeholder').innerText = nickname;
+            } else {
+                window.location = "login.html";
+                return;
+            }
+            
+            try {
+                var resposta = await fetch(`/usuarios/listarMusicasCurtidas/${idUsuario}`);
+                
+                if (resposta.ok) {
+                    var listaMusicas = await resposta.json();
+                    
+                    if (listaMusicas.length > 0) {
+                        RenderizarMusicas(listaMusicas);
+                    } else {
+                        document.getElementById('music-list-placeholder').innerHTML = "<p>Você ainda não curtiu nenhuma música.</p>";
+                    }
+                } else {
+                    var erro = await resposta.json(); 
+                    console.error(erro);
+                    MostrarFeedback(erro, false);
+                }
+            } catch (erro) {
+                MostrarFeedback("Erro de conexão ao buscar músicas.", false);
+            }
+            
+            try {
+                var resposta = await fetch(`/usuarios/favorita/${idUsuario}`);
+
+                if (resposta.ok) {
+                    var bandaFavorita = await resposta.json();
+                    document.getElementById('favorite-band-placeholder').innerText = bandaFavorita.name.toUpperCase();
+                } else {
+                    var erro = await resposta.json(); 
+                    console.error(erro);
+                    MostrarFeedback(erro, false);
+                }
+            } catch (erro) {
+                MostrarFeedback("Erro de conexão ao buscar banda favorita.", false);
+            }
+            
+            try {
+                var resposta = await fetch(`/usuarios/buscarRankingUsuarioSentimentos/${idUsuario}`);
+                if (resposta.ok) {
+                    var dadosGrafico = await resposta.json();
+                    InicializarGrafico(dadosGrafico);
+                } else {
+                    var erro = await resposta.json(); 
+                    console.error(erro);
+                    MostrarFeedback(erro, false);
+                    InicializarGrafico([]); 
+                }
+            } catch (erro) {
+                console.error("Erro na requisição do gráfico:", erro);
+                InicializarGrafico([]);
+            }
+        }
+        
+        function RenderizarMusicas(musicas) {
+            var container = document.getElementById('music-list-placeholder');
+            var htmlFinal = "";
+            
+            if (musicas[0].is_favorite) {
+                document.getElementById('favorite-music-placeholder').innerText = musicas[0].music_name.toUpperCase();
+            }
+            
+            for (var i = 0; i < musicas.length; i++) {
+                var musica = musicas[i];
+                
+                var iconLike = '../assets/icons/FilledLike.png';
+                var iconStar = musica.is_favorite ? '../assets/icons/FilledStar.png' : '../assets/icons/EmptyStar.png';
+                
+                var classeMood = `mood__${musica.mood_name ? musica.mood_name.toLowerCase() : 'default'}`;
+                
+                htmlFinal += `
+                    <div class="music__item">
+                        <img src="${musica.cover_path}" class="music__cover" alt="Capa">
+                        
+                        <div class="music__info">
+                            <div class='music__tag-container'>
+                                <span class="music__name">${musica.music_name}</span>
+                                <span class="music__tag ${classeMood}">${musica.mood_name}</span>
+                            </div>
+                            <span class="band__name__small">${musica.band_name}</span>
+                        </div>
+
+                        <div class="music__actions">
+                            <button class="btn__action" onclick="CurtirMusica(${musica.music_id})">
+                                <img src="${iconLike}" id="like-icon-${musica.music_id}">
+                            </button>
+                            
+                            <button class="btn__action" onclick="FavoritarMusica(${musica.music_id}, '${musica.music_name}')">
+                                <img src="${iconStar}" id="favorite-icon-${musica.music_id}">
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = htmlFinal;
+        }
+        
+        function CurtirMusica(idMusica) {
+            var img = document.getElementById(`like-icon-${idMusica}`);
+            var curtida = img.src.endsWith('FilledLike.png');
+            img.src = curtida ? '../assets/icons/EmptyLike.png' : '../assets/icons/FilledLike.png';
+            var idUsuario = localStorage.ID_USUARIO;
+            
+            fetch("/musicas/curtirMusica", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    musicIdServer: idMusica,
+                    userIdServer: idUsuario,
+                    acao: curtida ? 'descurtir' : 'curtir'
+                })
+            })
+            .then(resposta => {
+                if (!resposta.ok) {
+                    console.error("Ocorreu um erro ao curtir/descurtir");
+                    img.src = curtida ? '../assets/icons/FilledLike.png' : '../assets/icons/EmptyLike.png';
+                }
+            })
+            .catch(erro => {
+                console.error("Erro de rede:", erro);
+                img.src = curtida ? '../assets/icons/FilledLike.png' : '../assets/icons/EmptyLike.png';
+            });
+        }
+        
+        function FavoritarMusica(idMusica, nomeMusica) {
+            var img = document.getElementById(`favorite-icon-${idMusica}`);
+            var favorita = img.src.endsWith('FilledStar.png');
+            var musicasHTML = document.getElementById('music-list-placeholder');
+            
+            if (!favorita) {
+                var estrelaAntiga = musicasHTML.querySelector('img[src$="FilledStar.png"]');
+                
+                if (estrelaAntiga) {
+                    estrelaAntiga.src = '../assets/icons/EmptyStar.png';
+                }
+            }
+            
+            img.src = favorita ? '../assets/icons/EmptyStar.png' : '../assets/icons/FilledStar.png';
+            var textoHeader = document.getElementById('favorite-music-placeholder');
+            
+            if (!favorita) {
+                textoHeader.innerText = nomeMusica.toUpperCase();
+            } else {
+                textoHeader.innerText = "";
+            }
+            
+            var idUsuario = localStorage.ID_USUARIO;
+            
+            fetch("/usuarios/favoritarMusica", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    idMusicServer: favorita ? null : idMusica,
+                    idUserServer: idUsuario
+                })
+            }).catch(function (erro) {
+                console.log(erro)
+            });
+        }
+        
+        function InicializarGrafico(dadosDoBanco) {
+            const ctx = document.getElementById('chartRadarPerfil');
+            var labels = [];
+            var data = [];
+            var colors = [];
+            
+            for (var i = 0; i < dadosDoBanco.length; i++) {
+                var item = dadosDoBanco[i];
+                
+                labels.push(item.mood_name);
+                data.push(item.total_likes);
+                colors.push(item.mood_color);
+            }
+            
+            new Chart(ctx, {
+                type: 'polarArea',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            grid: { color: '#333' },
+                            ticks: { display: false, backdropColor: 'transparent' },
+                            pointLabels: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { 
+                                color: '#a0a0a0', 
+                                font: { 
+                                    size: 20, 
+                                    family: 'Inter',
+                                    weight: 'bold'
+                                }, 
+                                padding: 25
+                            }
+                        },
+                        tooltip: { 
+                            titleFont: { 
+                                family: 'Archivo Black',
+                                size: 20 
+                            },
+                            bodyFont: {
+                                family: 'Inter',
+                                size: 16
+                            },
+                            padding: 20,
+                            
+                            backgroundColor: '#161616', 
+                            titleColor: '#fff', 
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+    
+    <div id="modal-global" style="display: none;"></div>
+</body>
+</html>

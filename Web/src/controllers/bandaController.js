@@ -1,7 +1,7 @@
 var bandaModel = require("../models/bandaModel");
 
-function listar(req, res) {
-    bandaModel.listar().then(function (resultado) {
+function listarBandas(req, res) {
+    bandaModel.listarBandas().then(function (resultado) {
         if (resultado.length > 0) {
             res.status(200).json(resultado);
         } else {
@@ -9,34 +9,36 @@ function listar(req, res) {
         }
     }).catch(function (erro) {
         console.log(erro);
-        console.log("Houve um erro ao buscar as bandas: ", erro.sqlMessage);
-        res.status(500).json(erro.sqlMessage);
+        console.log(erro.sqlMessage);
+        res.status(500).json("Houve um erro ao buscar as bandas.");
     });
 }
 
-function buscarPorId(req, res) {
+function buscarBandaPorId(req, res) {
     var idBanda = req.params.idBanda;
     var idUsuario = req.query.idUsuario;
     
-    if (!idBanda || !idUsuario) {
-        console.log(`Id da banda ou do usuário invalidos: ${idBanda} | ${idUsuario}`)
+    if (idBanda == undefined) {
+        res.status(400).json("ID da banda inválido!");
+    } else if (idUsuario == undefined) {
+        res.status(400).json("ID do usuário inválido!");
     } else {
-        bandaModel.buscarPorId(idBanda, idUsuario).then(function (resultado) {
-            if (resultado.length <= 0) {
-                res.status(404).json(resultado);
-            } else {
+        bandaModel.buscarBandaPorId(idBanda, idUsuario).then(function (resultado) {
+            if (resultado.length > 0) {
                 res.status(200).json(formatarJson(resultado));
+            } else {
+                res.status(404).json("Banda não encontrada");
             }
         }).catch(function (erro) {
             console.log(erro);
-            console.log("Houve um erro ao buscar a banda: ", erro.sqlMessage);
-            res.status(500).json(erro.sqlMessage);
+            console.log(erro.sqlMessage);
+            res.status(500).json("Houve um erro ao buscar a banda.");
         })
     }
 }
 
-function buscarRanking(req, res) {
-    bandaModel.buscarRanking().then(function (resultado) {
+function buscarRankingBandas(req, res) {
+    bandaModel.buscarRankingBandas().then(function (resultado) {
         if (resultado.length > 0) {
             res.status(200).json(resultado);
         } else {
@@ -44,20 +46,8 @@ function buscarRanking(req, res) {
         }
     }).catch(function (erro) {
         console.log(erro);
-        console.log("Houve um erro ao buscar as bandas: ", erro.sqlMessage);
-        res.status(500).json(erro.sqlMessage);
-    });
-}
-
-
-function atualizarFavorito(req, res) {
-    var idBanda = req.body.idBandServer;
-    var idUsuario = req.body.idUserServer;
-
-    bandaModel.atualizarFavorito(idBanda, idUsuario).then(function(resultado) {
-        res.status(200).json(resultado);
-    }).catch(function(erro) {
-        res.status(500).json(erro.sqlMessage);
+        console.log(erro.sqlMessage);
+        res.status(500).json("Houve um erro ao buscar o ranking de bandas.");
     });
 }
 
@@ -113,8 +103,7 @@ function formatarJson(resultado) {
 
 
 module.exports = {
-    listar,
-    buscarPorId,
-    buscarRanking,
-    atualizarFavorito
+    listarBandas,
+    buscarBandaPorId,
+    buscarRankingBandas,
 }

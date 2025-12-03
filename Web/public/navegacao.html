@@ -28,40 +28,33 @@
     <script>
         CarregarHeader();
         CarregarFooter();
-        GetBandas()
+        ListarBandas()
         
         var bandList;
         
-        function GetBandas() {
-            fetch(`/bandas/listar`, {
+        function ListarBandas() {
+            fetch(`/bandas/listarBandas`, {
                 cache: 'no-store',
                 headers: {
                     "Content-Type": "application/json"
                 }
-            })
-            .then(function (resposta) {
-                console.log(resposta);
+            }).then(function (resposta) {
                 if (resposta.ok) {
                     resposta.json().then(json => {
-                        console.log(json);
                         bandList = json;
-                        ListarBandas();
+                        ExibirBandas();
                     });
                 } else {
-                    console.log("Houve um erro ao tentar listar as bandas");
-                    
-                    resposta.text().then(texto => {
-                        console.error(texto);
-                        // MostrarFeedback(texto)
-                    });
+                    resposta.json().then(function (erro) {
+                        MostrarFeedback(erro, false)
+                    })
                 }
             }).catch(function (erro) {
-                // MostrarFeedback(erro)
-                console.log(erro);
+                MostrarFeedback("Erro de conexão ao buscar bandas.", false);
             })
         }
         
-        function ListarBandas() {
+        function ExibirBandas() {
             var filteredBandList = [];
             var html = '';
             
@@ -91,8 +84,8 @@
             
             band__list.innerHTML = html;
         }
-        
-        
     </script>
+    
+    <div id="modal-global" style="display: none;"></div>
 </body>
 </html>

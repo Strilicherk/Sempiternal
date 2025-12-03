@@ -34,11 +34,8 @@
                         <div class="titulo__texto">
                             <h3>CURTA</h3>
                             <p>
-                                O poder é seu! Use 'Upvote' (em azul) para impulsionar as
-                                músicas que são a sua trilha sonora e 'Downvote' (em vermelho)
-                                para as que não são. Cada voto contribui para o Ranking
-                                Global, além de ajudar a construir o seu Radar de Sentimento
-                                em tempo real!
+                                Faça sua voz ser ouvida! Dê um Like nos hinos que te definem. 
+                                Sua interação define quem fica no topo do Ranking Global e alimenta o seu Radar de Sentimento instantaneamente!
                             </p>
                         </div>
                     </div>
@@ -121,23 +118,20 @@
             ];
             
             for (var i = 0; i < bandasLogos.length; i++) {
-                elementosImg += `<img src="${bandasLogos[i].src}" alt="${bandasLogos[i].alt}" id="${i}">`
+                elementosImg += `<img src="${bandasLogos[i].src}" alt="${bandasLogos[i].alt}" id="banda-${i}">`
             }
             
             lista__bandas__placeholder.innerHTML = elementosImg;
         }
         
         
-        
         var polarChart = document.getElementById("grafico__sentimentos");
         
         var sentimentos = ["Raiva", "Angústia", "Tristeza", "Solidão", "Energia"];
-        
         var cores = ["#E74C3C", "#8E44AD", "#345D98", "#6C7A89", "#F1C40F"];
-        
         var valores = [4900, 4600, 4200, 3800, 3200];
-        
         var labels = [];
+        
         for (var i = 0; i < sentimentos.length; i++) {
             labels.push(`${sentimentos[i]}: ${valores[i]}`);
         }

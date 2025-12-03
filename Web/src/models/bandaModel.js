@@ -1,16 +1,14 @@
 // const { buscarPorId } = require("../controllers/bandaController");
 var database = require("../database/config");
 
-function listar() {
+function listarBandas() {
     var instrucaoSql = `
         SELECT id, name, cover_path FROM band ORDER BY name;
     `;
-    
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
 }
 
-function buscarPorId(idBanda, idUsuario) {
+function buscarBandaPorId(idBanda, idUsuario) {
     var instrucaoSql = `
         SELECT 
             vw.*,
@@ -25,28 +23,19 @@ function buscarPorId(idBanda, idUsuario) {
                 LEFT JOIN
             user u ON u.id = ${idUsuario}
                 WHERE vw.band_id = ${idBanda};
-    `
-    
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    `;
     return database.executar(instrucaoSql);
 }
 
-function buscarRanking() {
+function buscarRankingBandas() {
     var instrucaoSql = `
         SELECT * FROM vw_band_ranking;
-    `
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
-    return database.executar(instrucaoSql);
-}
-
-function atualizarFavorito(idBanda, idUsuario) {
-    var instrucaoSql = `UPDATE user SET band_id = ${idBanda} WHERE id = ${idUsuario}`;
+    `;
     return database.executar(instrucaoSql);
 }
 
 module.exports = {
-    listar,
-    buscarPorId,
-    buscarRanking,
-    atualizarFavorito
+    listarBandas,
+    buscarBandaPorId,
+    buscarRankingBandas,
 };

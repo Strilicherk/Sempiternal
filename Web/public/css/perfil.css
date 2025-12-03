@@ -1,0 +1,212 @@
+main {
+    width: 90%;
+    margin-top: 2rem;
+}
+
+main h2 {
+    font-size: 1.7rem;
+}
+
+/* CSS  do "header" */
+
+.profile__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--text-secondary);
+}
+
+.user__favorites {
+    display: flex;
+    gap: 3rem;
+    text-align: center;
+}
+
+.fav__box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.label__icon {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.favorite__icon {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 5px;
+}
+
+.fav__label {
+    font-family: 'Inter';
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.icon__star {
+    width: 14px;
+    height: 14px;
+}
+
+/* CSS do conteúdo. */
+
+.profile__content {
+    display: flex;
+}
+
+.music__container {
+    width: 50%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 20px;
+}
+
+.music__list {
+    width: 100%;
+    height: 500px;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: var(--feeling-angry) var(--bg-dark);
+}
+
+/* CSS da lista de músicas */
+
+.music__item {
+    height: 80px;
+
+    display: flex;
+    align-items: center;
+    margin: 15px 30px;
+
+    padding: 10px 15px;
+    border-radius: 6px; 
+    background-color: var(--bg-medium);
+}
+
+.music__cover {
+    width: 70px;
+    height: 70px;
+    border-radius: 4px;
+    margin-right: 15px;
+}
+
+.music__info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.music__name {
+    font-family: 'Inter';
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.music__tag {
+    display: flex;
+    align-items: center;
+
+    font-size: 1rem;
+
+    padding: 2px 18px;
+    border-radius: 10px;
+
+    border: 1px solid;
+    width: fit-content;
+}
+
+.music__tag-container {
+    display: flex;
+    gap: 1rem;
+}
+
+.music__actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn__action {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.2s;
+}
+
+.btn__action img {
+    width: 24px;
+    height: 24px;
+}
+
+.btn__action:hover {
+    transform: scale(1.1);
+}
+
+/* CSS do gráfico */
+
+.radar__container {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+}
+
+.radar-wrapper {
+    width: 90%;
+    height: 400px;
+}
+
+/* CSS das tags de sentimento */
+
+.mood__raiva {
+    color: var(--feeling-angry);
+    border-color: var(--feeling-angry);
+    background: color-mix(in srgb, var(--feeling-angry), transparent 85%);
+}
+
+.mood__angústia {
+    color: var(--feeling-anguish);
+    border-color: var(--feeling-anguish);
+    background: color-mix(in srgb, var(--feeling-anguish), transparent 85%);
+}
+
+.mood__tristeza {
+    color: var(--feeling-sadness);
+    border-color: var(--feeling-sadness);
+    background: color-mix(in srgb, var(--feeling-sadness), transparent 85%);
+}
+
+.mood__solidão {
+    color: var(--feeling-loneliness);
+    border-color: var(--feeling-loneliness);
+    background: color-mix(in srgb, var(--feeling-loneliness), transparent 85%);
+}   
+
+.mood__energia {
+    color: var(--feeling-energy);
+    border-color: var(--feeling-energy);
+    background: color-mix(in srgb, var(--feeling-energy), transparent 85%);
+}
+
+.mood__desafio {
+    color: var(--feeling-challenge);
+    border-color: var(--feeling-challenge);
+    background: color-mix(in srgb, var(--feeling-challenge), transparent 85%);
+}
+
+.mood__catarse {
+    color: var(--feeling-catharsis);
+    border-color: var(--feeling-catharsis);
+    background: color-mix(in srgb, var(--feeling-catharsis), transparent 85%);
+}

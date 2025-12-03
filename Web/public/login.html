@@ -44,13 +44,7 @@
         function ValidarEmailLogin(email) {
             email = email.toLowerCase();
             var emailLoginValido = false;
-            
-            var provedoresPermitidos = [
-            "@gmail.com", 
-            "@hotmail.com", 
-            "@outlook.com", 
-            "@yahoo.com",
-            ];
+            var provedoresPermitidos = ["@gmail.com", "@hotmail.com", "@outlook.com", "@yahoo.com",];
             
             for (var i = 0; i < provedoresPermitidos.length; i++) {
                 var provedor = provedoresPermitidos[i];
@@ -74,19 +68,8 @@
             return true;
         }
         
-        function MostrarFeedback(mensagem) {
-            modal__card.innerHTML = mensagem;
-            modal__card.style.display = "block";
-            
-            if (funcionou == false) {
-                setTimeout(() => {
-                    modal__card.style.display = "none";
-                }, 5000);
-            }
-        }
-        
         function ValidarCredenciais(email, senha) {
-            fetch("/usuarios/autenticar", {
+            fetch("/usuarios/autenticarUsuario", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -98,37 +81,30 @@
             }).then(function (resposta) {
                 if (resposta.ok) {
                     resposta.json().then(json => {
-
-                        sessionStorage.ID_USUARIO = json.id
-                        sessionStorage.NICKNAME = json.nickname;
-                        
+                        localStorage.ID_USUARIO = json.id
+                        localStorage.NICKNAME = json.nickname;
+                        MostrarFeedback("Login bem sucedido. Redirecionando para a home page.", true)
                         window.location = "home.html";
                     });
                 } else {
-                    
-                    console.log("Houve um erro ao tentar realizar o login!");
-                    
-                    resposta.text().then(texto => {
-                        console.error(texto);
-                        MostrarFeedback(texto)
+                    resposta.json().then(json => {
+                        MostrarFeedback(json, false)
                     });
                 }
-                
             }).catch(function (erro) {
-                MostrarFeedback(erro)
-                console.log(erro);
+                MostrarFeedback(erro, false)
             })
             
             return false;
         }
         
-        
         function Entrar(email, senha) {            
             if (ValidarEmailLogin(email) && ValidarSenhaLogin(senha)) {
                 ValidarCredenciais(email, senha)
             }
-        }
-        
+        }  
     </script>
+    
+    <div id="modal-global" style="display: none;"></div>
 </body>
 </html>

@@ -8,8 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/componentes.js"></script>
     <title>Home</title>
-    
-    
 </head>
 <body>
     
@@ -62,36 +60,42 @@
         var rankingBandas;
         
         window.onload = async function () {
-            idUsuario = sessionStorage.ID_USUARIO;
-
+            idUsuario = localStorage.ID_USUARIO;
+            
             if (idUsuario == undefined) {
                 window.location.href = 'cadastro.html';
                 return;
             }
-
+            
             try {
-                resposta = await fetch(`/musicas/buscarRanking`);
+                resposta = await fetch(`/musicas/buscarRankingGeralMusica`);
                 
                 if (resposta.ok) {
                     rankingMusicas = await resposta.json();
                 } else {
-                    console.log(resposta)
+                    var erro = await resposta.json();
+                    console.log(erro);
+                    MostrarFeedback(erro, false);
                 }
                 
-                resposta = await fetch(`/musicas/buscarRankingSentimentos`);
+                resposta = await fetch(`/musicas/buscarRankingGeralSentimentos`);
                 
                 if (resposta.ok) {
                     rankingSentimentos = await resposta.json();
                 } else {
-                    console.log(resposta)
+                    var erro = await resposta.json();
+                    console.log(erro);
+                    MostrarFeedback(erro, false);
                 }
                 
-                resposta = await fetch(`/bandas/buscarRanking`);
+                resposta = await fetch(`/bandas/buscarRankingBandas`);
                 
                 if (resposta.ok) {
                     rankingBandas = await resposta.json();
                 } else {
-                    console.log(resposta)
+                    var erro = await resposta.json();
+                    console.log(erro);
+                    MostrarFeedback(erro, false);
                 }
                 
                 if (rankingMusicas) RenderizarRankingMusicas();
@@ -99,6 +103,7 @@
                 if (rankingBandas) RenderizarRankingBandas();
             } catch (resposta) {
                 console.log(`#ERRO: ${resposta}`);
+                MostrarFeedback(resposta.json(), false);
             }
         }
         
@@ -278,5 +283,7 @@
             container.innerHTML = htmlFinal;
         }
     </script>
+    
+    <div id="modal-global" style="display: none;"></div>
 </body>
 </html>

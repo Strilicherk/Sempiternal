@@ -12,7 +12,6 @@
     <header id="header-placeholder"></header>
     
     <main>
-        <div id="modal__card"></div>
         <div class="auth__card">
             <div class="auth__tabs">
                 <a href="cadastro.html" class="tab__link tab__active">CADASTRO</a>
@@ -58,35 +57,6 @@
     
     <script>
         CarregarHeader();
-
-        /* 
-        Chama cadastrar.
-        valida se o nickname atende.
-        busca no bd se já está cadastrado.
-        valida se o email atende.
-        busca no bd se ja esta cadastrado.
-        valida se a senha atende.
-        valida se as senhas são iguais.
-        cadastra no banco
-        */
-        
-        function MostrarFeedback(mensagem, funcionou) {
-            modal__card.innerHTML = mensagem;
-            modal__card.style.display = "block";
-            modal__card.classList.remove("modal__success", "modal__error");
-            
-            if (funcionou === true) {
-                modal__card.classList.add("modal__success");
-            } else {
-                modal__card.classList.add("modal__error");
-            }
-            
-            if (funcionou == false) {
-                setTimeout(() => {
-                    modal__card.style.display = "none";
-                }, 5000);
-            }
-        }
         
         function ValidarNickname(nickname) {
             if ((nickname.trim()).length < 3) {
@@ -99,12 +69,7 @@
         }
         
         function ValidarEmail(email) {
-            var provedoresPermitidos = [
-            "@gmail.com", 
-            "@outlook.com", 
-            "@yahoo.com",
-            "@hotmail.com", 
-            ];
+            var provedoresPermitidos = ["@gmail.com", "@outlook.com", "@yahoo.com", "@hotmail.com"];
             
             for (var i = 0; i < provedoresPermitidos.length; i++) {
                 var provedor = provedoresPermitidos[i];
@@ -128,56 +93,22 @@
             var temEspecial = false;
             var temTamanho = false;
             
-            if (senha.length >= 8) {
-                temTamanho = true;
-            }
+            temTamanho = senha.length >= 8 ? true : false
             
             for (var i = 0; i < senha.length; i++) {
                 var char = senha[i];
                 
-                if (char >= 'A' && char <= 'Z') {
-                    temMaiuscula = true;
-                }
-                else if (char >= 'a' && char <= 'z') {
-                    temMinuscula = true;
-                }
-                else if (numeros.indexOf(char) > -1) {
-                    temNumero = true;
-                }
-                else if (caracteresEspeciais.indexOf(char) > -1) {
-                    temEspecial = true;
-                }
+                if (char >= 'A' && char <= 'Z') temMaiuscula = true;
+                else if (char >= 'a' && char <= 'z') temMinuscula = true;
+                else if (numeros.indexOf(char) > -1) temNumero = true;
+                else if (caracteresEspeciais.indexOf(char) > -1) temEspecial = true;
             }
             
-            if (temMaiuscula) {
-                req__maiuscula.classList.add('texto__verde');
-            } else {
-                req__maiuscula.classList.remove('texto__verde');
-            }
-            
-            if (temMinuscula) {
-                req__minuscula.classList.add('texto__verde');
-            } else {
-                req__minuscula.classList.remove('texto__verde');
-            }
-            
-            if (temNumero) {
-                req__numero.classList.add('texto__verde');
-            } else {
-                req__numero.classList.remove('texto__verde');
-            }
-            
-            if (temEspecial) {
-                req__especial.classList.add('texto__verde');
-            } else {
-                req__especial.classList.remove('texto__verde');
-            }
-            
-            if (temTamanho) {
-                req__tamanho.classList.add('texto__verde');
-            } else {
-                req__tamanho.classList.remove('texto__verde');
-            }
+            temMaiuscula ? req__maiuscula.classList.add('texto__verde') : req__maiuscula.classList.remove('texto__verde');
+            temMinuscula ? req__minuscula.classList.add('texto__verde') : req__minuscula.classList.remove('texto__verde');
+            temNumero ? req__numero.classList.add('texto__verde') : req__numero.classList.remove('texto__verde');
+            temEspecial ? req__especial.classList.add('texto__verde') : req__especial.classList.remove('texto__verde');
+            temTamanho ? req__tamanho.classList.add('texto__verde') : req__tamanho.classList.remove('texto__verde');
             
             if (temMaiuscula && temMinuscula && temNumero && temEspecial && temTamanho) {
                 return true;
@@ -197,7 +128,7 @@
         
         function Cadastrar(nickname, email, senha, confirmaSenha) {
             if (ValidarNickname(nickname) && ValidarEmail(email) && ValidarSenha(senha) && ValidarConfirmacaoSenha(senha, confirmaSenha)) {
-                fetch("/usuarios/cadastrar", {
+                fetch("/usuarios/cadastrarUsuario", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -208,23 +139,16 @@
                         emailServer: email,
                         senhaServer: senha
                     }),
-                })
-                .then(function (resposta) {
-                    console.log(resposta);
-                    
+                }).then(function (resposta) {
                     if (resposta.ok) {
-                        
-                        MostrarFeedback("Cadastro realizado com sucesso! Redirecionando para tela de Login...", true);
-                        setTimeout(() => {
-                            window.location.href = "login.html";
-                        }, 2000);
-                        
+                        resposta.json().then(json => {
+                            MostrarFeedback(json, true);
+                            window.location.href = 'login.html'
+                        })
                     } else {
-                        console.log(resposta);
-                        
                         if (resposta.status == 409) {
                             resposta.text().then(textoDoErro => {
-                                if (textoDoErro.includes("NICKNAME")) {
+                                if (textoDoErro.includes("nickname")) {
                                     MostrarFeedback("Esse nickname já está sendo utilizado!", false);
                                 } else {
                                     MostrarFeedback("Esse e-mail já foi cadastrado!", false);
@@ -234,14 +158,14 @@
                             MostrarFeedback("Erro inesperado. Tente novamente!", false);
                         }
                     }
-                })
-                .catch(function (resposta) {
-                    console.log(`#ERRO: ${resposta}`);
+                }).catch(function (resposta) {
                     MostrarFeedback("Erro de conexão. Verifique sua internet.", false);
                 });
             }
         }
         
     </script>
+    
+    <div id="modal-global" style="display: none;"></div>
 </body>
 </html>

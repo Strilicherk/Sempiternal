@@ -1,46 +1,37 @@
 var musicaModel = require("../models/musicaModel");
 
-function curtir(req, res) {
+function curtirMusica(req, res) {
     var idMusica = req.body.musicIdServer; 
     var idUsuario = req.body.userIdServer;
     var acao = req.body.acao;
     
-    if (!idMusica || !idUsuario) {
-        res.status(400).send(`Não foi possível coletar a informação de música (${idMusica}) ou de usuário (${idUsuario})`);
-        return;
-    }
-    
-    if (acao == 'descurtir') {
-        musicaModel.descurtir(idMusica, idUsuario).then(function(resultado) {
-            res.status(200).json(resultado);
-        }).catch(function(erro) {
-            console.log(erro);
-            res.status(500).json(erro.sqlMessage);
-        });
+    if (idMusica == undefined) {
+        res.status(400).json("Id da música é inválido!");
+    } else if (idUsuario == undefined) {
+        res.status(400).json("Id do usuário é inválido!");
     } else {
-        musicaModel.curtir(idMusica, idUsuario).then(function(resultado) {
-            res.status(200).json(resultado);
-        }).catch(function(erro) {
-            console.log(erro);
-            res.status(500).json(erro.sqlMessage);
-        });
+        if (acao == 'descurtir') {
+            musicaModel.descurtirMusica(idMusica, idUsuario).then(function(resultado) {
+                res.status(200).json(resultado);
+            }).catch(function(erro) {
+                console.log(erro);
+                console.log(erro.sqlMessage);
+                res.status(500).json('Houve um erro ao "descurtir" a música.');
+            });
+        } else {
+            musicaModel.curtirMusica(idMusica, idUsuario).then(function(resultado) {
+                res.status(200).json(resultado);
+            }).catch(function(erro) {
+                console.log(erro);
+                console.log(erro.sqlMessage);
+                res.status(500).json('Houve um erro ao curtir a música.');
+            });
+        }
     }
 }
 
-function atualizarFavorito(req, res) {
-    var idMusica = req.body.idMusicServer;
-    var idUsuario = req.body.idUserServer;
-
-
-    musicaModel.atualizarFavorito(idMusica, idUsuario).then(function(resultado) {
-        res.status(200).json(resultado);
-    }).catch(function(erro) {
-        res.status(500).json(erro.sqlMessage);
-    });
-}
-
-function buscarRanking(req, res) {
-    musicaModel.buscarRanking().then(function (resultado) {
+function buscarRankingGeralMusica(req, res) {
+    musicaModel.buscarRankingGeralMusica().then(function (resultado) {
         if (resultado.length > 0) {
             res.status(200).json(resultado);
         } else {
@@ -48,13 +39,13 @@ function buscarRanking(req, res) {
         }
     }).catch(function (erro) {
         console.log(erro);
-        console.log("Houve um erro ao buscar as bandas: ", erro.sqlMessage);
-        res.status(500).json(erro.sqlMessage);
+        console.log(erro.sqlMessage);
+        res.status(500).json('Houve um erro ao buscar o ranking de músicas.');
     });
 }
 
-function buscarRankingSentimentos(req, res) {
-    musicaModel.buscarRankingSentimentos().then(function (resultado) {
+function buscarRankingGeralSentimentos(req, res) {
+    musicaModel.buscarRankingGeralSentimentos().then(function (resultado) {
         if (resultado.length > 0) {
             res.status(200).json(resultado);
         } else {
@@ -62,13 +53,13 @@ function buscarRankingSentimentos(req, res) {
         }
     }).catch(function (erro) {
         console.log(erro);
-        res.status(500).json(erro.sqlMessage);
+        console.log(erro.sqlMessage);
+        res.status(500).json('Houve um erro ao buscar o ranking de sentimentos.');
     });
 }
 
 module.exports = {
-    curtir,
-    atualizarFavorito,
-    buscarRanking,
-    buscarRankingSentimentos
+    curtirMusica,
+    buscarRankingGeralMusica,
+    buscarRankingGeralSentimentos
 }

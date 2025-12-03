@@ -1,3 +1,5 @@
+var feedbackTimeout;
+
 function CarregarHeader() {
     var headerHTML;
     var navContent;
@@ -6,7 +8,7 @@ function CarregarHeader() {
     if (logado) {
         navContent = `
             <ul class="navbar__items">
-                <li><a href="index.html" class="navbar__items__options">Home</a></li>
+                <li><a href="home.html" class="navbar__items__options">Home</a></li>
                 <li><a href="navegacao.html" class="navbar__items__options">Bandas</a></li>
                 <li><a href="perfil.html" class="navbar__items__options">Perfil</a></li>
                 <li><button onclick="Logout()" class="navbar__items__options btn_logout">Sair</button></li>
@@ -98,7 +100,27 @@ function CarregarFooter() {
     document.getElementById("footer-placeholder").innerHTML = footerHTML;
 }
 
+function MostrarFeedback(mensagem, sucesso) {
+    var modal = document.getElementById("modal-global");
+    clearTimeout(feedbackTimeout);
+
+    modal.innerText = mensagem;
+    modal.className = ""; 
+    
+    if (sucesso) {
+        modal.classList.add("modal__sucesso");
+    } else {
+        modal.classList.add("modal__erro");
+    }
+
+    modal.style.display = "block";
+
+    feedbackTimeout = setTimeout(() => {
+        modal.style.display = "none";
+    }, 4000);
+}
+
 function Logout() {
-    sessionStorage.clear();
+    localStorage.clear();
     window.location.href = "login.html";
 }
