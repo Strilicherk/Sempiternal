@@ -197,5 +197,18 @@ SELECT * FROM vw_band_ranking;
 -- Ranking de músicas;
 SELECT * FROM vw_music_ranking;
 
+-- Ranking de sentimentos;
 SELECT * FROM vw_mood_ranking;
+
+-- Lista de músicas do usuário;
+SELECT * FROM vw_profile_liked_songs 
+WHERE user_id = 1 
+ORDER BY is_favorite DESC, music_name ASC;
+
+-- Traz o usuário e sua relação de sentimentos;
+SELECT * FROM vw_user_mood_stats 
+WHERE user_id = 1
+ORDER BY total_likes DESC;
+
+SELECT b.name as nome FROM user u JOIN band b ON u.band_id = b.id WHERE u.id = 1;
     

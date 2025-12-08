@@ -3,7 +3,7 @@ var feedbackTimeout;
 function CarregarHeader() {
     var headerHTML;
     var navContent;
-    var logado = sessionStorage.getItem("ID_USUARIO");
+    var logado = localStorage.getItem("ID_USUARIO");
     
     if (logado) {
         navContent = `

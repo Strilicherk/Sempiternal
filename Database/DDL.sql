@@ -152,4 +152,41 @@ GROUP BY
     md.id, md.name, md.color
 ORDER BY 
     total_likes DESC;
-        
+
+CREATE VIEW vw_profile_liked_songs AS
+SELECT 
+    ml.user_id,
+    m.id AS music_id,
+    m.name AS music_name,
+    b.name AS band_name,
+    a.cover_path,
+    md.name AS mood_name,
+    md.color AS mood_color,
+    IF(u.music_id = m.id, 1, 0) AS is_favorite
+FROM
+    music_like ml
+        JOIN
+    music m ON ml.music_id = m.id
+        JOIN
+    album a ON m.album_id = a.id
+		JOIN
+    band b ON a.band_id = b.id
+        JOIN
+    mood md ON m.mood_id = md.id
+        JOIN
+    user u ON ml.user_id = u.id;
+
+CREATE VIEW vw_user_mood_stats AS
+SELECT 
+    ml.user_id,           
+    md.name AS mood_name,
+    md.color AS mood_color,
+    COUNT(ml.music_id) AS total_likes
+FROM
+    music_like ml
+        JOIN
+    music m ON ml.music_id = m.id
+        JOIN
+    mood md ON m.mood_id = md.id
+GROUP BY 
+    ml.user_id, md.id, md.name, md.color;
